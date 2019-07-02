@@ -4,6 +4,7 @@ const url = require('url');
 require('electron-reload')(__dirname);
 require('update-electron-app')()
 const ipcMain = require('electron').ipcMain;
+const { setup: setupPushReceiver } = require('electron-push-receiver');
 
 class Main {
 
@@ -51,6 +52,8 @@ class Main {
         this.tray.on('double-click',()=>{
           mainWindow.show();
         })
+        // Call it before 'did-finish-load' with mainWindow a reference to your window
+        setupPushReceiver(mainWindow.webContents);
     }
 }
 
