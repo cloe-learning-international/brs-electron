@@ -2,6 +2,7 @@ const {app, BrowserWindow, Tray, Menu} = require('electron');
 const path = require('path');
 const url = require('url');
 require('electron-reload')(__dirname);
+require('update-electron-app')()
 
 class Main {
 
