@@ -29,6 +29,7 @@ class Main {
         // on ajoute le tray
         let tray = null
         var mainWindow = this.browserWindow;
+        mainWindow.maximize();
         this.tray = new Tray(path.join(__dirname, '/assets/image/petit-logo.png'))
         var contextMenu = Menu.buildFromTemplate([
             { label: 'Afficher', click:  function(){
