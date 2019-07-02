@@ -20,7 +20,13 @@ class Main {
     }
 
     createWindow() {
-        this.browserWindow = new BrowserWindow({width: 1024, height: 768, minWidth: 640, minHeight: 480})
+        this.browserWindow = new BrowserWindow({
+          width: 1024,
+          height: 768,
+          minWidth: 640,
+          minHeight: 480,
+          icon: path.join(__dirname, '/assets/image/petit-logo.png')
+        })
         this.browserWindow.loadURL(url.format({
             pathname: path.join(__dirname, './index.html'),
             protocol: 'file:',
