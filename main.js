@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, Tray, Menu} = require('electron');
 const path = require('path');
 const url = require('url');
 require('electron-reload')(__dirname);
@@ -7,16 +7,6 @@ class Main {
 
     constructor() {
         app.on('ready', this.createWindow)
-        app.on('window-all-closed', () => {
-            if (process.platform !== 'darwin') {
-                app.quit()
-            }
-        })
-        app.on('activate', () => {
-            if (this.browserWindow === null) {
-                this.createWindow()
-            }
-        })
     }
 
     createWindow() {
@@ -34,6 +24,24 @@ class Main {
         }))
         this.browserWindow.on('closed', () => {
             this.browserWindow = null
+        })
+        // on ajoute le tray
+        let tray = null
+        var mainWindow = this.browserWindow;
+        this.tray = new Tray(path.join(__dirname, '/assets/image/petit-logo.png'))
+        var contextMenu = Menu.buildFromTemplate([
+            { label: 'Afficher', click:  function(){
+                mainWindow.show();
+            } },
+            { label: 'Quitter', click:  function(){
+                app.isQuiting = true;
+                app.quit();
+            } }
+        ])
+        this.tray.setToolTip('Biorésonance et Santé')
+        this.tray.setContextMenu(contextMenu)
+        this.tray.on('double-click',()=>{
+          mainWindow.show();
         })
     }
 }
