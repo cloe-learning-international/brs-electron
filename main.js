@@ -3,6 +3,7 @@ const path = require('path');
 const url = require('url');
 require('electron-reload')(__dirname);
 require('update-electron-app')()
+const ipcMain = require('electron').ipcMain;
 
 class Main {
 
@@ -29,11 +30,16 @@ class Main {
         // on ajoute le tray
         let tray = null
         var mainWindow = this.browserWindow;
+        // avoir la fenettre en plein ecran
         mainWindow.maximize();
+        // ajouter le logo brs dans la barre des tâches
         this.tray = new Tray(path.join(__dirname, '/assets/image/petit-logo.png'))
         var contextMenu = Menu.buildFromTemplate([
             { label: 'Afficher', click:  function(){
                 mainWindow.show();
+            } },
+            { label: 'Minimiser', click:  function(){
+                mainWindow.hide();
             } },
             { label: 'Quitter', click:  function(){
                 app.isQuiting = true;

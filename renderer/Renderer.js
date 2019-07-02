@@ -4,7 +4,6 @@ const storage = require("electron-json-storage")
 const path = require("path")
 
 exports.Renderer = class Renderer {
-
     constructor(components) {
         this.navElement = document.querySelector("nav")
         this.mainElement = document.querySelector("main")
@@ -74,5 +73,4 @@ exports.Renderer = class Renderer {
         this.fontawesome.library.add(require('@fortawesome/fontawesome-free-solid/faPlus'))
         this.fontawesome.library.add(require('@fortawesome/fontawesome-free-solid/faTrash'))
     }
-
 }
