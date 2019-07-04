@@ -27,6 +27,7 @@
     "electron-json-storage": "^4.1.6",
     "electron-package": "^0.1.0",
     "electron-reload": "^1.4.0",
+    "electron-settings": "^2.2.2",
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
     "tablesort": "^5.1.0",
