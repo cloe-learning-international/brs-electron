@@ -1,28 +1,18 @@
-# electron-bootstrap-starter
-Electron with Bootstrap 4 starter project with CRUD and data persistence.
+# BRS-Electron
 
-![electron-bootstrap-starter](https://shaack.com/projekte/assets/img/electron-bootstrap-starter.png "electron-bootstrap-starter")
+## Pourquoi ?
 
-## This is
+Ce projet a pour but de simplifier l'utilisation des appareils et services de BRS.
 
-A starter project to show how to get [Electron](https://electronjs.org/) and Bootstrap 4 
-running together. 
-
-### Features
-- Bootstrap 4
-- ES6
-- Components architecture
-- Simple reactive behaviour (without React, Angular etc.)
-- Font-Awesome 5 integration
-- CRUD example with JSON storage in file
-- Settings component with persistent storage
+### Fonctionnalités
+- Installations des appareils
+- Dépannages des appareils
+- Aides des appareils
+- Sauvegarde des appareils
+- Liens utiles (formations, comptabilité, forum,...)
+- Chat live entre thérapeute ?
+- Fonction en-ligne/hors-ligne
 
 ## Installation
 
-Clone sources and run
-
-```npm install```
-
-## Running
-
-```npm start```
+À voir plus tard...
