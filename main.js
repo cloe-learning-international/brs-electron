@@ -1,4 +1,7 @@
-require('update-electron-app')()
+require('update-electron-app')({
+  repo: 'https://github.com/roseaubenjamin/brs-electron',
+  updateInterval: '5 minutes'
+})
 const {app, BrowserWindow, Tray, Menu, ipcMain} = require('electron');
 const path = require('path');
 const url = require('url');
