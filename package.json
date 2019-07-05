@@ -25,6 +25,7 @@
     "auto-launch": "^5.0.5",
     "bootstrap": "^4.3.1",
     "bootstrap-input-spinner": "^1.11.4",
+    "electron-builder": "^20.44.4",
     "electron-json-storage": "^4.1.6",
     "electron-package": "^0.1.0",
     "electron-reload": "^1.4.0",
