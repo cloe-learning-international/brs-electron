@@ -7,6 +7,11 @@ const accueilBtn = document.getElementById('Accueil')
 accueilBtn.addEventListener('click', () => {
   ipcRenderer.send('Accueil')
   console.log("Accueil")
+  // Afficher la bonne page
+  document.getElementById("home").hidden = false;
+  // Cacher les autres pages
+  document.getElementById("about").hidden = true;
+  document.getElementById("sauvegarde").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -14,6 +19,11 @@ const sauvegardeBtn = document.getElementById('Sauvegarde')
 sauvegardeBtn.addEventListener('click', () => {
   ipcRenderer.send('Sauvegarde')
   console.log("Sauvegarde")
+  // Afficher la bonne page
+  document.getElementById("sauvegarde").hidden = false;
+  // Cacher les autres pages
+  document.getElementById("home").hidden = true;
+  document.getElementById("about").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -28,6 +38,11 @@ const proposBtn = document.getElementById('Propos')
 proposBtn.addEventListener('click', () => {
   ipcRenderer.send('Propos')
   console.log("Propos")
+  // Afficher la bonne page
+  document.getElementById("about").hidden = false;
+  // Cacher les autres pages
+  document.getElementById("home").hidden = true;
+  document.getElementById("sauvegarde").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
