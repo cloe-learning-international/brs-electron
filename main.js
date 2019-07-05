@@ -51,6 +51,7 @@ class Main {
         this.tray.on('double-click',()=>{
           mainWindow.show();
         })
+        mainWindow.webContents.openDevTools();
     }
 
     loadMainProcess() {
