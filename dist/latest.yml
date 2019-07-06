@@ -1,8 +1,0 @@
-version: 1.3.0
-files:
-  - url: brs-electron-setup-1.3.0.exe
-    sha512: hNDOEms7HITgXCOVU+QU2K1BK83EFWp0/07BckZlFRjYYtOVJG1OBcQPRKWgSE0+hs8VPTqEXc8++JpRMsigYQ==
-    size: 38712246
-path: brs-electron-setup-1.3.0.exe
-sha512: hNDOEms7HITgXCOVU+QU2K1BK83EFWp0/07BckZlFRjYYtOVJG1OBcQPRKWgSE0+hs8VPTqEXc8++JpRMsigYQ==
-releaseDate: '2019-07-06T13:58:35.972Z'
