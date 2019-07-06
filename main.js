@@ -3,11 +3,15 @@ const path = require('path');
 const url = require('url');
 require('electron-reload')(__dirname);
 const glob = require('glob');
+const {autoUpdater} = require("electron-updater");
 
 class Main {
     constructor() {
         app.on('ready', this.createWindow)
         app.on('ready', this.loadMainProcess)
+        app.on('ready', function()  {
+          autoUpdater.checkForUpdatesAndNotify();
+        });
     }
 
     createWindow() {

@@ -1,0 +1,12 @@
+directories:
+  output: dist
+  buildResources: build
+appId: BrsElectron.V1.0.0
+productName: BRS-Electron
+copyright: Webero Agency Ltd 2019
+win:
+  target: nsis
+  icon: build/icon.png
+publish:
+  provider: github
+electronVersion: 1.8.8

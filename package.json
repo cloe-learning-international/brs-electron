@@ -1,6 +1,6 @@
 {
   "name": "brs-electron",
-  "version": "1.2.8",
+  "version": "1.3.0",
   "description": "Electron App For BRS",
   "keywords": [
     "Bootstrap",
@@ -12,8 +12,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "build --win",
-    "ship": "build --win -p always"
+    "build": "build",
+    "publish": "build --win -p always"
   },
   "author": "Benjamin Roseau",
   "license": "ISC",
@@ -37,5 +37,17 @@
     "tablesort": "^5.1.0",
     "update-electron-app": "^1.4.2",
     "v": "^0.3.0"
+  },
+  "build": {
+    "appId": "BrsElectron.V1.0.0",
+    "productName": "BRS-Electron",
+    "copyright": "Webero Agency Ltd 2019",
+    "win":{
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "publish":{
+      "provider": "github"
+    }
   }
 }
