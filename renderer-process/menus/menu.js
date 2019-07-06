@@ -12,6 +12,7 @@ accueilBtn.addEventListener('click', () => {
   // Cacher les autres pages
   document.getElementById("about").hidden = true;
   document.getElementById("sauvegarde").hidden = true;
+  document.getElementById("comptabilite").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -24,6 +25,7 @@ sauvegardeBtn.addEventListener('click', () => {
   // Cacher les autres pages
   document.getElementById("home").hidden = true;
   document.getElementById("about").hidden = true;
+  document.getElementById("comptabilite").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -31,6 +33,12 @@ const comptabiliteBtn = document.getElementById('Comptabilite')
 comptabiliteBtn.addEventListener('click', () => {
   ipcRenderer.send('Comptabilite')
   console.log("Comptabilite")
+  // Afficher la bonne page
+  document.getElementById("comptabilite").hidden = false;
+  // Cacher les autres pages
+  document.getElementById("home").hidden = true;
+  document.getElementById("about").hidden = true;
+  document.getElementById("sauvegarde").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -43,6 +51,7 @@ proposBtn.addEventListener('click', () => {
   // Cacher les autres pages
   document.getElementById("home").hidden = true;
   document.getElementById("sauvegarde").hidden = true;
+  document.getElementById("comptabilite").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked

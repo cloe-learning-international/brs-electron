@@ -2,6 +2,9 @@ console.log("home.js from renderer-process")
 
 const {ipcRenderer} = require('electron')
 
+// Lancer par défaut cette page au lancement de l'application
+document.getElementById("home").hidden = false;
+
 // Tell main process to start the soft when the button is clicked
 const aumscan4LuxeBtn = document.getElementById('demarrer-aumscan4-luxe')
 aumscan4LuxeBtn.addEventListener('click', () => {
