@@ -1,8 +1,8 @@
-version: 1.3.1
+version: 1.3.2
 files:
-  - url: brs-electron-setup-1.3.1.exe
-    sha512: fJnnvLb5O5cpmXfgW2iZusRH7D8Y6EIZdJYndwtcDovUIYHcyzZBumEGvKT03le7+abcBKUcodVFTPlwYfTRJA==
-    size: 38712503
-path: brs-electron-setup-1.3.1.exe
-sha512: fJnnvLb5O5cpmXfgW2iZusRH7D8Y6EIZdJYndwtcDovUIYHcyzZBumEGvKT03le7+abcBKUcodVFTPlwYfTRJA==
-releaseDate: '2019-07-06T14:18:32.733Z'
+  - url: brs-electron-setup-1.3.2.exe
+    sha512: 2pVan0/QayfoVf+q4J8yFb45+ON2T8YV7fWj5o5U6ZsA+HHCXh/YlkgzKeRbW31ZhyKuVFYyKgM+d3FnUZpo9Q==
+    size: 38710851
+path: brs-electron-setup-1.3.2.exe
+sha512: 2pVan0/QayfoVf+q4J8yFb45+ON2T8YV7fWj5o5U6ZsA+HHCXh/YlkgzKeRbW31ZhyKuVFYyKgM+d3FnUZpo9Q==
+releaseDate: '2019-07-06T14:21:58.678Z'
