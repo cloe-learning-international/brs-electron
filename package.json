@@ -32,7 +32,9 @@
     "electron-reload": "^1.4.0",
     "electron-settings": "^2.2.2",
     "electron-updater": "^4.0.14",
+    "infusionsoft-node-sdk": "0.0.1",
     "jquery": "^3.4.1",
+    "passport-infusionsoft": "0.0.3",
     "popper.js": "^1.15.0",
     "tablesort": "^5.1.0",
     "update-electron-app": "^1.4.2",
@@ -42,11 +44,11 @@
     "appId": "BrsElectron.V1.0.0",
     "productName": "BRS-Electron",
     "copyright": "Webero Agency Ltd 2019",
-    "win":{
+    "win": {
       "target": "nsis",
       "icon": "build/icon.png"
     },
-    "publish":{
+    "publish": {
       "provider": "github"
     }
   }

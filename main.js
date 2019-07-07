@@ -5,6 +5,25 @@ require('electron-reload')(__dirname);
 const glob = require('glob');
 const {autoUpdater} = require("electron-updater");
 
+// IFS API
+var InfusionsoftRestApi = require('infusionsoft-node-sdk');
+var api = new InfusionsoftRestApi.AppointmentApi()
+var opts = {
+  'since': "since_example", // {String} Date to start searching from ex. `2017-01-01T22:17:59.039Z`
+  'until': "until_example", // {String} Date to search to ex. `2017-01-01T22:17:59.039Z`
+  'limit': 56, // {Number} Sets a total of items to return
+  'offset': 56 // {Number} Sets a beginning range of items to return
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.appointmentsUsingGET(opts, callback);
+
 class Main {
     constructor() {
         app.on('ready', this.createWindow)
