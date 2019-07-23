@@ -15,4 +15,7 @@ Ce projet a pour but de simplifier l'utilisation des appareils et services de BR
 
 ## Installation
 
-À voir plus tard...
+1) Créer un dossier où vous souhaitez cloner l'application
+2) Rendez vous dans ce dossier (via la commande cd CHEMIN)
+3) Cloner l'application à l'aide de la commande suivante :
+  git clone https://github.com/roseaubenjamin/brs-electron.gitm
