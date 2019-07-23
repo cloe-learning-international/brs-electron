@@ -39,3 +39,27 @@ cardiaumOrientBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-orient')
   console.log("demarrer-cardiaum-orient")
 })
+
+
+
+
+// Tell main process to start the soft when the button is clicked
+const ouvrirBrsEuBtn = document.getElementById('ouvrir-BRSEU')
+ouvrirBrsEuBtn.addEventListener('click', () => {
+  ipcRenderer.send('ouvrir-BRSEU')
+  console.log("ouvrir-BRSEU")
+})
+
+// Tell main process to start the soft when the button is clicked
+const ouvrirCloeBtn = document.getElementById('ouvrir-CLOE')
+ouvrirCloeBtn.addEventListener('click', () => {
+  ipcRenderer.send('ouvrir-CLOE')
+  console.log("ouvrir-CLOE")
+})
+
+// Tell main process to start the soft when the button is clicked
+const ouvrirBrsFrBtn = document.getElementById('ouvrir-BRSFR')
+ouvrirBrsFrBtn.addEventListener('click', () => {
+  ipcRenderer.send('ouvrir-BRSFR')
+  console.log("ouvrir-BRSFR")
+})
