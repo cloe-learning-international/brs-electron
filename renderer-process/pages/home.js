@@ -51,10 +51,22 @@ ouvrirBrsEuBtn.addEventListener('click', () => {
 })
 
 // Tell main process to start the soft when the button is clicked
-const ouvrirCloeBtn = document.getElementById('ouvrir-CLOE')
-ouvrirCloeBtn.addEventListener('click', () => {
-  ipcRenderer.send('ouvrir-CLOE')
-  console.log("ouvrir-CLOE")
+const ouvrirCloeAumscanBtn = document.getElementById('ouvrir-CLOEAUMSCAN')
+ouvrirCloeAumscanBtn.addEventListener('click', () => {
+  ipcRenderer.send('ouvrir-CLOEAUMSCAN')
+  console.log("ouvrir-CLOEAUMSCAN")
+})
+// Tell main process to start the soft when the button is clicked
+const ouvrirCloeCardiaumBtn = document.getElementById('ouvrir-CLOECARDIAUM')
+ouvrirCloeCardiaumBtn.addEventListener('click', () => {
+  ipcRenderer.send('ouvrir-CLOECARDIAUM')
+  console.log("ouvrir-CLOECARDIAUM")
+})
+// Tell main process to start the soft when the button is clicked
+const ouvrirCloeTqBtn = document.getElementById('ouvrir-CLOETQ')
+ouvrirCloeTqBtn.addEventListener('click', () => {
+  ipcRenderer.send('ouvrir-CLOETQ')
+  console.log("ouvrir-CLOETQ")
 })
 
 // Tell main process to start the soft when the button is clicked
