@@ -32,6 +32,8 @@
     "electron-reload": "^1.4.0",
     "electron-settings": "^2.2.2",
     "electron-updater": "^4.0.14",
+    "infusionsoft": "^0.3.7",
+    "infusionsoft-api": "^0.6.0",
     "infusionsoft-node-sdk": "0.0.1",
     "jquery": "^3.4.1",
     "passport-infusionsoft": "0.0.3",
