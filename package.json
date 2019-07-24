@@ -24,6 +24,7 @@
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "ajv": "^6.10.2",
     "auto-launch": "^5.0.5",
     "bootstrap": "^4.3.1",
     "bootstrap-input-spinner": "^1.11.4",

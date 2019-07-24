@@ -73,5 +73,5 @@ ouvrirCloeTqBtn.addEventListener('click', () => {
 const ouvrirBrsFrBtn = document.getElementById('ouvrir-BRSFR')
 ouvrirBrsFrBtn.addEventListener('click', () => {
   ipcRenderer.send('ouvrir-BRSFR')
-  console.log("ouvrir-BRSFR")
+  console.log("ouvrir-BRSFR");
 })
