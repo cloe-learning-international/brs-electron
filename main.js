@@ -4,6 +4,7 @@ const url = require('url');
 require('electron-reload')(__dirname);
 const glob = require('glob');
 const {autoUpdater} = require("electron-updater");
+const updater = require('electron-simple-updater');
 
 var iSDK = require('infusionsoft');
 var client = new iSDK('fv365', '90dc7f6f69e10070e23c68c3ffdba162');
@@ -19,7 +20,8 @@ class Main {
         app.on('ready', this.createWindow)
         app.on('ready', this.loadMainProcess)
         app.on('ready', function()  {
-          autoUpdater.checkForUpdatesAndNotify();
+          //autoUpdater.checkForUpdatesAndNotify();
+          updater.init('https://github.com/roseaubenjamin/brs-electron/updates.json');
         });
     }
 

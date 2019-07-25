@@ -13,13 +13,17 @@
   "scripts": {
     "start": "electron .",
     "build": "build",
-    "publish": "build --win -p always"
+    "publish": "build --win -p always",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . brs-electron-app --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"brs-electron\"",
+    "package-linux": "electron-packager . brs-electron-app --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
   },
   "author": "Benjamin Roseau",
   "license": "ISC",
   "devDependencies": {
     "electron": "^1.8.8",
-    "electron-builder": "^20.44.4"
+    "electron-builder": "^20.44.4",
+    "electron-packager": "^14.0.3"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
@@ -32,6 +36,7 @@
     "electron-package": "^0.1.0",
     "electron-reload": "^1.4.0",
     "electron-settings": "^2.2.2",
+    "electron-simple-updater": "^1.5.0",
     "electron-updater": "^4.0.14",
     "infusionsoft": "^0.3.7",
     "infusionsoft-api": "^0.6.0",
