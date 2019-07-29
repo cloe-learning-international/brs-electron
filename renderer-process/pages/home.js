@@ -48,6 +48,19 @@ const ouvrirBrsEuBtn = document.getElementById('ouvrir-BRSEU')
 ouvrirBrsEuBtn.addEventListener('click', () => {
   ipcRenderer.send('ouvrir-BRSEU')
   console.log("ouvrir-BRSEU")
+  var contactId = document.getElementById("input-web-official-contactid").value;
+  var url = "https://bio-resonance.eu/?contactId="+contactId;
+  console.log("++++++++++++++", url)
+  document.getElementById("external-page").innerHTML='<iframe src="'+url+'">'
+  // Afficher la bonne page
+  document.getElementById("external-page").hidden = false;
+  // Cacher les autres pages
+  document.getElementById("home").hidden = true;
+  document.getElementById("about").hidden = true;
+  document.getElementById("sauvegarde").hidden = true;
+  document.getElementById("aide").hidden = true;
+  document.getElementById("depannage").hidden = true;
+  document.getElementById("comptabilite").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -74,4 +87,18 @@ const ouvrirBrsFrBtn = document.getElementById('ouvrir-BRSFR')
 ouvrirBrsFrBtn.addEventListener('click', () => {
   ipcRenderer.send('ouvrir-BRSFR')
   console.log("ouvrir-BRSFR");
+  var contactId = document.getElementById("input-forum-private-contactid").value;
+  var url = "https://bio-resonance.fr/connexion/?contactId="+contactId;
+  document.getElementById("external-page").innerHTML='<iframe src="'+url+'">'
+
+  console.log("++++++++++++++", url)
+  // Afficher la bonne page
+  document.getElementById("external-page").hidden = false;
+  // Cacher les autres pages
+  document.getElementById("home").hidden = true;
+  document.getElementById("about").hidden = true;
+  document.getElementById("sauvegarde").hidden = true;
+  document.getElementById("aide").hidden = true;
+  document.getElementById("depannage").hidden = true;
+  document.getElementById("comptabilite").hidden = true;
 })

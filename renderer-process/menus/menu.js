@@ -15,6 +15,7 @@ accueilBtn.addEventListener('click', () => {
   document.getElementById("comptabilite").hidden = true;
   document.getElementById("aide").hidden = true;
   document.getElementById("depannage").hidden = true;
+  document.getElementById("external-page").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -30,6 +31,7 @@ sauvegardeBtn.addEventListener('click', () => {
   document.getElementById("comptabilite").hidden = true;
   document.getElementById("aide").hidden = true;
   document.getElementById("depannage").hidden = true;
+  document.getElementById("external-page").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -45,6 +47,7 @@ comptabiliteBtn.addEventListener('click', () => {
   document.getElementById("sauvegarde").hidden = true;
   document.getElementById("aide").hidden = true;
   document.getElementById("depannage").hidden = true;
+  document.getElementById("external-page").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -60,6 +63,7 @@ proposBtn.addEventListener('click', () => {
   document.getElementById("comptabilite").hidden = true;
   document.getElementById("aide").hidden = true;
   document.getElementById("depannage").hidden = true;
+  document.getElementById("external-page").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -75,6 +79,7 @@ aideBtn.addEventListener('click', () => {
   document.getElementById("comptabilite").hidden = true;
   document.getElementById("about").hidden = true;
   document.getElementById("depannage").hidden = true;
+  document.getElementById("external-page").hidden = true;
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -90,4 +95,5 @@ depannageBtn.addEventListener('click', () => {
   document.getElementById("comptabilite").hidden = true;
   document.getElementById("about").hidden = true;
   document.getElementById("aide").hidden = true;
+  document.getElementById("external-page").hidden = true;
 })
