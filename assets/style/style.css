@@ -60,11 +60,18 @@ table.crud {
 
 /*exernal page*/
 #external-page {
-  height: 100vh;
+  min-height: 480px;
+  height: calc(100vh - 68px);
 }
 
-#external-page iframe{
+#external-page webview{
   width: 100%;
   height: 100%;
   border: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
