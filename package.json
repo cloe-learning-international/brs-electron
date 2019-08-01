@@ -44,6 +44,8 @@
     "jquery": "^3.4.1",
     "passport-infusionsoft": "0.0.3",
     "popper.js": "^1.15.0",
+    "readdir-recursive": "0.0.4",
+    "recursive-readdir-async": "^1.1.5",
     "tablesort": "^5.1.0",
     "update-electron-app": "^1.5.0",
     "v": "^0.3.0"

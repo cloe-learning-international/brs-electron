@@ -1,6 +1,10 @@
 console.log("home.js from renderer-process")
 
-const {ipcRenderer} = require('electron')
+const {ipcRenderer} = require('electron');
+var path = require("path");
+var child = require('child_process').execFile;
+const fs = require('fs');
+rread = require('readdir-recursive');
 
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;
@@ -10,6 +14,28 @@ const aumscan4LuxeBtn = document.getElementById('demarrer-aumscan4-luxe')
 aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4-luxe')
   console.log("demarrer-aumscan4-luxe")
+  const testFolder = '/home/lydia/Documents/ESSAI';
+
+  const folder = 'C:'; 
+  const appName =  'iexplore.exe';
+
+  rread.file(folder, function(file) {
+    var fullName = file.split('/');
+    if(fullName[fullName.length - 1] === appName) {
+      //remplace le \ par \\
+      var fileTreated = file.replace(/\\\\/, /\\\\{2}/); 
+      console.log(fileTreated)
+      child(fileTreated, function(err, data) {
+          if(err){
+             console.error(err);
+             return;
+          }
+       
+          console.log(data.toString());
+      });
+    }
+  })
+
 })
 
 // Tell main process to start the soft when the button is clicked
