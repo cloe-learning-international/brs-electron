@@ -16,16 +16,9 @@ aumscan4LuxeBtn.addEventListener('click', () => {
   console.log("demarrer-aumscan4-luxe")
 
   //const folder = 'C:'; 
-  const appName =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
-
-  child(appName, function(err, data) {
-      if(err){
-         console.error(err);
-         return;
-      }
-   
-      console.log(data.toString());
-  });
+  const appAumscan4Luxe =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  launchExe(appAumscan4Luxe);
+  
 
   /*rread.file(folder, function(file) {
     var fullName = file.split('/');
@@ -51,6 +44,8 @@ const aumscan4Btn = document.getElementById('demarrer-aumscan4')
 aumscan4Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4')
   console.log("demarrer-aumscan4")
+  const appAumscan4 =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  launchExe(appAumscan4);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -58,6 +53,8 @@ const aumscan3Btn = document.getElementById('demarrer-aumscan3')
 aumscan3Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan3')
   console.log("demarrer-aumscan3")
+  const appAumscan3 =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  launchExe(appAumscan3);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -65,6 +62,8 @@ const cardiaumNaturoBtn = document.getElementById('demarrer-cardiaum-naturo')
 cardiaumNaturoBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-naturo')
   console.log("demarrer-cardiaum-naturo")
+  const appCardiumNaturo =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  launchExe(appCardiumNaturo);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -72,6 +71,8 @@ const cardiaumOrientBtn = document.getElementById('demarrer-cardiaum-orient')
 cardiaumOrientBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-orient')
   console.log("demarrer-cardiaum-orient")
+  const appCardiumOrient =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  launchExe(appCardiumOrient);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -167,3 +168,10 @@ ouvrirBrsEuBtn.addEventListener('click', () => {
   document.getElementById("depannage").hidden = true;
   document.getElementById("comptabilite").hidden = true;
 })
+
+function launchExe(appName) {
+  child(appName, function(err, data) {
+      if(err) throw err;   
+      console.log(data.toString());
+  });
+}
