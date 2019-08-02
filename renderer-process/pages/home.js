@@ -14,15 +14,23 @@ const aumscan4LuxeBtn = document.getElementById('demarrer-aumscan4-luxe')
 aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4-luxe')
   console.log("demarrer-aumscan4-luxe")
-  const testFolder = '/home/lydia/Documents/ESSAI';
 
-  const folder = 'C:'; 
-  const appName =  'iexplore.exe';
+  //const folder = 'C:'; 
+  const appName =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
 
-  rread.file(folder, function(file) {
+  child(appName, function(err, data) {
+      if(err){
+         console.error(err);
+         return;
+      }
+   
+      console.log(data.toString());
+  });
+
+  /*rread.file(folder, function(file) {
     var fullName = file.split('/');
     if(fullName[fullName.length - 1] === appName) {
-      //remplace le \ par \\
+      
       var fileTreated = file.replace(/\\\\/, /\\\\{2}/); 
       console.log(fileTreated)
       child(fileTreated, function(err, data) {
@@ -34,7 +42,7 @@ aumscan4LuxeBtn.addEventListener('click', () => {
           console.log(data.toString());
       });
     }
-  })
+  })*/
 
 })
 
