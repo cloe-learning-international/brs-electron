@@ -44,7 +44,7 @@ const aumscan4Btn = document.getElementById('demarrer-aumscan4')
 aumscan4Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4')
   console.log("demarrer-aumscan4")
-  const appAumscan4 =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  const appAumscan4 =  'C:\\Users\\rosea\\AppData\\Roaming\\Aumscan 4\\Aumscan v4.exe';
   launchExe(appAumscan4);
 })
 
@@ -53,7 +53,7 @@ const aumscan3Btn = document.getElementById('demarrer-aumscan3')
 aumscan3Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan3')
   console.log("demarrer-aumscan3")
-  const appAumscan3 =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  const appAumscan3 =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Naturo\\Cardiaum-Naturo.exe';
   launchExe(appAumscan3);
 })
 
@@ -62,7 +62,7 @@ const cardiaumNaturoBtn = document.getElementById('demarrer-cardiaum-naturo')
 cardiaumNaturoBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-naturo')
   console.log("demarrer-cardiaum-naturo")
-  const appCardiumNaturo =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  const appCardiumNaturo =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Naturo\\Cardiaum-Naturo.exe';
   launchExe(appCardiumNaturo);
 })
 
@@ -71,7 +71,7 @@ const cardiaumOrientBtn = document.getElementById('demarrer-cardiaum-orient')
 cardiaumOrientBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-orient')
   console.log("demarrer-cardiaum-orient")
-  const appCardiumOrient =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  const appCardiumOrient =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Orient\\Cardiaum-Orient.exe';
   launchExe(appCardiumOrient);
 })
 
