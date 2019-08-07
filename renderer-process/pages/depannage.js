@@ -15,5 +15,4 @@ desactivateWindowsBtn.addEventListener('click', () => {
 	// console.log( stderr: ${vbs.stderr.toString()} );
 	// console.log( stdout: ${vbs.stdout.toString()} );
 	// console.log( status: ${vbs.status} );
-
 })
