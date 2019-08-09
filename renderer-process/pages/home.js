@@ -1,6 +1,10 @@
 console.log("home.js from renderer-process")
 
-const {ipcRenderer} = require('electron')
+const {ipcRenderer} = require('electron');
+var path = require("path");
+var child = require('child_process').execFile;
+const fs = require('fs');
+rread = require('readdir-recursive');
 
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;
@@ -10,6 +14,29 @@ const aumscan4LuxeBtn = document.getElementById('demarrer-aumscan4-luxe')
 aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4-luxe')
   console.log("demarrer-aumscan4-luxe")
+
+  //const folder = 'C:'; 
+  const appAumscan4Luxe =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+  launchExe(appAumscan4Luxe);
+  
+
+  /*rread.file(folder, function(file) {
+    var fullName = file.split('/');
+    if(fullName[fullName.length - 1] === appName) {
+      
+      var fileTreated = file.replace(/\\\\/, /\\\\{2}/); 
+      console.log(fileTreated)
+      child(fileTreated, function(err, data) {
+          if(err){
+             console.error(err);
+             return;
+          }
+       
+          console.log(data.toString());
+      });
+    }
+  })*/
+
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -17,6 +44,8 @@ const aumscan4Btn = document.getElementById('demarrer-aumscan4')
 aumscan4Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4')
   console.log("demarrer-aumscan4")
+  const appAumscan4 =  'C:\\Users\\rosea\\AppData\\Roaming\\Aumscan 4\\Aumscan v4.exe';
+  launchExe(appAumscan4);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -24,6 +53,8 @@ const aumscan3Btn = document.getElementById('demarrer-aumscan3')
 aumscan3Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan3')
   console.log("demarrer-aumscan3")
+  const appAumscan3 =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Naturo\\Cardiaum-Naturo.exe';
+  launchExe(appAumscan3);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -31,6 +62,8 @@ const cardiaumNaturoBtn = document.getElementById('demarrer-cardiaum-naturo')
 cardiaumNaturoBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-naturo')
   console.log("demarrer-cardiaum-naturo")
+  const appCardiumNaturo =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Naturo\\Cardiaum-Naturo.exe';
+  launchExe(appCardiumNaturo);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -38,6 +71,8 @@ const cardiaumOrientBtn = document.getElementById('demarrer-cardiaum-orient')
 cardiaumOrientBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-orient')
   console.log("demarrer-cardiaum-orient")
+  const appCardiumOrient =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Orient\\Cardiaum-Orient.exe';
+  launchExe(appCardiumOrient);
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -133,3 +168,10 @@ ouvrirBrsEuBtn.addEventListener('click', () => {
   document.getElementById("depannage").hidden = true;
   document.getElementById("comptabilite").hidden = true;
 })
+
+function launchExe(appName) {
+  child(appName, function(err, data) {
+      if(err) throw err;   
+      console.log(data.toString());
+  });
+}

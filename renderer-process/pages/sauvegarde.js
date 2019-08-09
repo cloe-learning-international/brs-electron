@@ -3,6 +3,9 @@ console.log("home.js from renderer-process")
 const {ipcRenderer} = require('electron')
 var fs = require('fs');
 
+var path = require('path');
+var progress = require('progress-stream');
+
 const appData =  (require('electron').app || require('electron').remote.app).getPath('userData');
 const cardiumPath = 'C:\\ProgramData\\Dinamika\\Database';
 
@@ -12,11 +15,18 @@ aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-luxe')
   console.log("sauvegarde-aumscan4-luxe")
 
-  //const pathAumscan = path.join(appData, 'Roaming\\Aumscan 4\\Base');
-  const pathAumscan = appData + '\\Aumscan 4\\Base';
+  const pathAumscan = path.join(appData, 'Aumscan 4\\Base');
+  var fileName = 'BASEUSER.FDB';
 
   checkDirectory(appData, 'Aumscan 4', 'Base', function(path) {
-    var ws = fs.createWriteStream(pathAumscan + '\\BASEUSER.FDB');
+    var ws = fs.createWriteStream(path.join(pathAumscan, fileName));
+
+    var stat = fs.statSync(fileName);
+    var str = progress({
+        length: stat.size,
+        time: 10 /* ms */
+    });
+
     var data = {
                 "glossary": {
                     "title": "example glossary",
@@ -40,10 +50,21 @@ aumscan4LuxeBtn.addEventListener('click', () => {
                 }
             }
 
-    setTimeout(function () {
-      ws.write(JSON.stringify(data));
-      ws.end('\n');
-    }, 1000);
+    str.on('progress', function(progress) {
+        console.log(progress.percentage);
+        const modalLoading = document.getElementById('modal-loading-sample')
+        modalLoading.style.display = 'block';
+        if(progress.percentage === 100) 
+          setTimeout(function () {
+            modalLoading.style.display = 'none';
+          }, 1000);
+    });
+
+    fs.createReadStream(fileName)
+      .pipe(str)
+      .pipe(fs.createWriteStream(fileName))
+      .end(JSON.stringify(data));
+
   })
   
   
@@ -54,7 +75,8 @@ aumscan4LuxeBtnList.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-luxe-liste')
   console.log("sauvegarde-aumscan4-luxe-liste")
 
-  const pathAumscanLuxe = appData+ '\\Aumscan 4\\Base';
+  const pathAumscanLuxe = path.join(appData, 'Aumscan 4\\Base');
+
   walkSync(pathAumscanLuxe, function(paths) {
     var paths = paths.sort(function(a, b){return b-a});
     console.log(' ++++++++++ ', JSON.stringify(paths))
@@ -129,15 +151,15 @@ var walkSync = function(dir, cb) {
 };
 
 function checkDirectory(root, folder1, folder2, cb) { 
-  fs.access(root+'\\'+folder1+'\\'+folder2, error => {
+  var directory = path.join(root, folder1, folder2);
+  fs.access(directory, error => {
       if (!error) {
           console.log('folder already exists')
       } else {
-        console.log(root+'\\'+folder1+'\\'+folder2, ' ++++++++++++ ')
-          fs.mkdir(appData + '\\' + folder1, function() {
-            fs.mkdir(appData + '\\' + folder1 + '\\' + folder2, cb);
+          fs.mkdir(path.join(appData, folder1), function() {
+            fs.mkdir(directory)
           });
       }
   });
-  cb(root+'\\'+folder1+'\\'+folder2);
+  cb(directory);
 }
