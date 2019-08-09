@@ -4,7 +4,7 @@ const {ipcRenderer} = require('electron');
 var path = require("path");
 var child = require('child_process').execFile;
 const fs = require('fs');
-rread = require('readdir-recursive');
+//rread = require('readdir-recursive');
 
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;

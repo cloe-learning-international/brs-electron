@@ -15,13 +15,13 @@ aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-luxe')
   console.log("sauvegarde-aumscan4-luxe")
 
-  const pathAumscan = path.join(appData, 'Aumscan 4\\Base');
+  const pathAumscan = path.join(appData, 'Aumscan 4\\Base\\BASEUSER.FDB');
   var fileName = 'BASEUSER.FDB';
 
-  checkDirectory(appData, 'Aumscan 4', 'Base', function(path) {
-    var ws = fs.createWriteStream(path.join(pathAumscan, fileName));
+  checkDirectory(appData,'Aumscan 4', 'Base', function(path) {
+    var ws = fs.createWriteStream(pathAumscan);
 
-    var stat = fs.statSync(fileName);
+    var stat = fs.statSync(pathAumscan);
     var str = progress({
         length: stat.size,
         time: 10 /* ms */
@@ -53,16 +53,16 @@ aumscan4LuxeBtn.addEventListener('click', () => {
     str.on('progress', function(progress) {
         console.log(progress.percentage);
         const modalLoading = document.getElementById('modal-loading-sample')
-        modalLoading.style.display = 'block';
+        modalLoading.style.display = 'flex';
         if(progress.percentage === 100) 
           setTimeout(function () {
             modalLoading.style.display = 'none';
           }, 1000);
     });
 
-    fs.createReadStream(fileName)
+    fs.createReadStream(pathAumscan)
       .pipe(str)
-      .pipe(fs.createWriteStream(fileName))
+      .pipe(fs.createWriteStream(pathAumscan))
       .end(JSON.stringify(data));
 
   })
@@ -152,12 +152,13 @@ var walkSync = function(dir, cb) {
 
 function checkDirectory(root, folder1, folder2, cb) { 
   var directory = path.join(root, folder1, folder2);
-  fs.access(directory, error => {
+  fs.access(path.join(root, folder1), error => {
       if (!error) {
           console.log('folder already exists')
+          fs.mkdir(directory, cb)
       } else {
-          fs.mkdir(path.join(appData, folder1), function() {
-            fs.mkdir(directory)
+          fs.mkdir(path.join(root, folder1), function() {
+            fs.mkdir(directory, cb)
           });
       }
   });
