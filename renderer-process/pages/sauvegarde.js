@@ -15,6 +15,28 @@ const aumscan4LuxeBtn = document.getElementById('sauvegarde-aumscan4-luxe')
 aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-luxe')
   console.log("sauvegarde-aumscan4-luxe")
+  
+})
+// Tell main process to start the soft when the button is clicked
+const aumscan4LuxeBtnList = document.getElementById('sauvegarde-aumscan4-luxe-liste')
+aumscan4LuxeBtnList.addEventListener('click', () => {
+  ipcRenderer.send('sauvegarde-aumscan4-luxe-liste')
+  console.log("sauvegarde-aumscan4-luxe-liste")
+
+  const pathAumscanLuxe = path.join(appData, 'Aumscan 4\\Base');
+
+  walkSync(pathAumscanLuxe, function(paths) {
+    var paths = paths.sort(function(a, b){return b-a});
+    console.log(' ++++++++++ ', JSON.stringify(paths))
+  })
+})
+
+
+// Tell main process to start the soft when the button is clicked
+const aumscan4Btn = document.getElementById('sauvegarde-aumscan4')
+aumscan4Btn.addEventListener('click', () => {
+  ipcRenderer.send('sauvegarde-aumscan4')
+  console.log("sauvegarde-aumscan4")
 
   const options = {
     title: "Sauvegarde",
@@ -34,7 +56,7 @@ aumscan4LuxeBtn.addEventListener('click', () => {
         console.log("Le dossier source n'existe pas!");
       } else {
 
-        //Start 1
+       
         // fs.copyFile(source, destination, (err) => {
         //     if (err) {
         //       throw err;
@@ -42,10 +64,8 @@ aumscan4LuxeBtn.addEventListener('click', () => {
         //     }
         //     console.log('Sauvegarde effectuée avec succès!');
         // });
-        //End 1
+     
 
-
-        //Start 2
         var ws = fs.createWriteStream(destination);
         var stat = fs.statSync(destination);
         var str = progress({
@@ -72,32 +92,10 @@ aumscan4LuxeBtn.addEventListener('click', () => {
               .end(data.toString('utf8'));
         });
 
-        //End 2
+        
       }
     });
   });
-  
-})
-// Tell main process to start the soft when the button is clicked
-const aumscan4LuxeBtnList = document.getElementById('sauvegarde-aumscan4-luxe-liste')
-aumscan4LuxeBtnList.addEventListener('click', () => {
-  ipcRenderer.send('sauvegarde-aumscan4-luxe-liste')
-  console.log("sauvegarde-aumscan4-luxe-liste")
-
-  const pathAumscanLuxe = path.join(appData, 'Aumscan 4\\Base');
-
-  walkSync(pathAumscanLuxe, function(paths) {
-    var paths = paths.sort(function(a, b){return b-a});
-    console.log(' ++++++++++ ', JSON.stringify(paths))
-  })
-})
-
-
-// Tell main process to start the soft when the button is clicked
-const aumscan4Btn = document.getElementById('sauvegarde-aumscan4')
-aumscan4Btn.addEventListener('click', () => {
-  ipcRenderer.send('sauvegarde-aumscan4')
-  console.log("sauvegarde-aumscan4")
 })
 // Tell main process to start the soft when the button is clicked
 const aumscan4BtnList = document.getElementById('sauvegarde-aumscan4-liste')
