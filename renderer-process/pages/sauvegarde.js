@@ -42,60 +42,62 @@ aumscan4Btn.addEventListener('click', () => {
     title: "Sauvegarde",
     defaultPath: (require('electron').app || require('electron').remote.app).getPath('documents') + '/BASEUSER_' + getDateString() + '.FDB',
     buttonLabel : "sauvegarder",
-    filters :[{extensions: ['FDB','fdb']}]
+    filters :[{name: 'Sauvegarde', extensions: ['FDB','fdb']}]
   }
 
   dialog.showSaveDialog(null, options, (destination) => {
-    console.log(destination, ' +++++++++++++++++++++++ ');
-    console.log(appData, ' ****************************** ');
-    const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
-    
-    fs.access(source, error => {
-      if (error) {
-        throw error;
-        console.log("Le dossier source n'existe pas!");
-      } else {
+    if(destination != undefined) {
+      console.log(destination, ' +++++++++++++++++++++++ ');
+      console.log(appData, ' ****************************** ');
+      const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
+      
+      fs.access(source, error => {
+        if (error) {
+          throw error;
+          console.log("Le dossier source n'existe pas!");
+        } else {
 
+
+          // fs.copyFile(source, destination, (err) => {
+          //     if (err) {
+          //       throw err;
+          //       console.log('Sauvegarde non effectuée!');
+          //     }
+          //     console.log('Sauvegarde effectuée avec succès!');
+          // });
        
-        // fs.copyFile(source, destination, (err) => {
-        //     if (err) {
-        //       throw err;
-        //       console.log('Sauvegarde non effectuée!');
-        //     }
-        //     console.log('Sauvegarde effectuée avec succès!');
-        // });
-     
 
-        var ws = fs.createWriteStream(destination);
-        var stat = fs.statSync(destination);
-        var str = progress({
-            length: stat.size,
-            time: 10 /* ms */
-        });
+          var ws = fs.createWriteStream(destination);
+          var stat = fs.statSync(destination);
+          var str = progress({
+              length: stat.size,
+              time: 10 /* ms */
+          });
 
-        str.on('progress', function(progress) {
-            console.log(progress.percentage);
-            const modalLoading = document.getElementById('modal-loading-sample')
-            modalLoading.style.display = 'flex';
-            if(progress.percentage === 100) 
-              setTimeout(function () {
-                modalLoading.style.display = 'none';
-              }, 1000);
-        });
+          str.on('progress', function(progress) {
+              console.log(progress.percentage);
+              const modalLoading = document.getElementById('modal-loading-sample')
+              modalLoading.style.display = 'flex';
+              if(progress.percentage === 100) 
+                setTimeout(function () {
+                  modalLoading.style.display = 'none';
+                }, 1000);
+          });
 
-        fs.readFile(source, function(err, data) { 
-            if (err) throw err;
-            console.log(data.toString('utf8'))
-            fs.createReadStream(destination)
-              .pipe(str)
-              .pipe(fs.createWriteStream(destination))
-              .end(data.toString('utf8'));
-        });
+          fs.readFile(source, function(err, data) { 
+              if (err) throw err;
+              console.log(data.toString('utf8'))
+              fs.createReadStream(destination)
+                .pipe(str)
+                .pipe(fs.createWriteStream(destination))
+                .end(data.toString('utf8'));
+          });
 
-        
-      }
-    });
-  });
+          
+        }
+      });
+    }
+  })
 })
 // Tell main process to start the soft when the button is clicked
 const aumscan4BtnList = document.getElementById('sauvegarde-aumscan4-liste')
@@ -179,3 +181,4 @@ function getDateString() {
   const day =`${date.getDate()}`.padStart(2, '0');
   return `${year}${month}${day}`
 }
+
