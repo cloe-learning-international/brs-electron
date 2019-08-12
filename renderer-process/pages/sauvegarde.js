@@ -5,6 +5,7 @@ var fs = require('fs');
 
 var path = require('path');
 var progress = require('progress-stream');
+const {dialog} = require('electron').remote;
 
 const appData =  (require('electron').app || require('electron').remote.app).getPath('userData');
 const cardiumPath = 'C:\\ProgramData\\Dinamika\\Database';
@@ -15,58 +16,66 @@ aumscan4LuxeBtn.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-luxe')
   console.log("sauvegarde-aumscan4-luxe")
 
-  const pathAumscan = path.join(appData, 'Aumscan 4\\Base\\BASEUSER.FDB');
-  var fileName = 'BASEUSER.FDB';
+  const options = {
+    title: "Sauvegarde",
+    defaultPath: (require('electron').app || require('electron').remote.app).getPath('documents') + '/BASEUSER_' + getDateString() + '.FDB',
+    buttonLabel : "sauvegarder",
+    filters :[{extensions: ['FDB','fdb']}]
+  }
 
-  checkDirectory(appData,'Aumscan 4', 'Base', function(path) {
-    var ws = fs.createWriteStream(pathAumscan);
+  dialog.showSaveDialog(null, options, (destination) => {
+    console.log(destination, ' +++++++++++++++++++++++ ');
+    console.log(appData, ' ****************************** ');
+    const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
+    
+    fs.access(source, error => {
+      if (error) {
+        throw error;
+        console.log("Le dossier source n'existe pas!");
+      } else {
 
-    var stat = fs.statSync(pathAumscan);
-    var str = progress({
-        length: stat.size,
-        time: 10 /* ms */
+        //Start 1
+        // fs.copyFile(source, destination, (err) => {
+        //     if (err) {
+        //       throw err;
+        //       console.log('Sauvegarde non effectuée!');
+        //     }
+        //     console.log('Sauvegarde effectuée avec succès!');
+        // });
+        //End 1
+
+
+        //Start 2
+        var ws = fs.createWriteStream(destination);
+        var stat = fs.statSync(destination);
+        var str = progress({
+            length: stat.size,
+            time: 10 /* ms */
+        });
+
+        str.on('progress', function(progress) {
+            console.log(progress.percentage);
+            const modalLoading = document.getElementById('modal-loading-sample')
+            modalLoading.style.display = 'flex';
+            if(progress.percentage === 100) 
+              setTimeout(function () {
+                modalLoading.style.display = 'none';
+              }, 1000);
+        });
+
+        fs.readFile(source, function(err, data) { 
+            if (err) throw err;
+            console.log(data.toString('utf8'))
+            fs.createReadStream(destination)
+              .pipe(str)
+              .pipe(fs.createWriteStream(destination))
+              .end(data.toString('utf8'));
+        });
+
+        //End 2
+      }
     });
-
-    var data = {
-                "glossary": {
-                    "title": "example glossary",
-                "GlossDiv": {
-                        "title": "S",
-                  "GlossList": {
-                            "GlossEntry": {
-                                "ID": "SGML",
-                      "SortAs": "SGML",
-                      "GlossTerm": "Standard Generalized Markup Language",
-                      "Acronym": "SGML",
-                      "Abbrev": "ISO 8879:1986",
-                      "GlossDef": {
-                                    "para": "A meta-markup language, used to create markup languages such as DocBook.",
-                        "GlossSeeAlso": ["GML", "XML"]
-                                },
-                      "GlossSee": "markup"
-                            }
-                        }
-                    }
-                }
-            }
-
-    str.on('progress', function(progress) {
-        console.log(progress.percentage);
-        const modalLoading = document.getElementById('modal-loading-sample')
-        modalLoading.style.display = 'flex';
-        if(progress.percentage === 100) 
-          setTimeout(function () {
-            modalLoading.style.display = 'none';
-          }, 1000);
-    });
-
-    fs.createReadStream(pathAumscan)
-      .pipe(str)
-      .pipe(fs.createWriteStream(pathAumscan))
-      .end(JSON.stringify(data));
-
-  })
-  
+  });
   
 })
 // Tell main process to start the soft when the button is clicked
@@ -163,4 +172,12 @@ function checkDirectory(root, folder1, folder2, cb) {
       }
   });
   cb(directory);
+}
+
+function getDateString() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day =`${date.getDate()}`.padStart(2, '0');
+  return `${year}${month}${day}`
 }
