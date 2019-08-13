@@ -11,7 +11,7 @@
       </div>
       <div class="column justify-content-center align-self-center mt-3">
         <button type="button" name="sauvegarde-aumscan4" id="sauvegarde-aumscan4" class="btn btn-primary btn-lg mr-2">Sauvegarder l'Aumscan 4 </button>
-        <button type="button" name="sauvegarde-aumscan4-liste" id="sauvegarde-aumscan4-liste" class="btn btn-outline-primary m-auto">Accéder à la liste des sauvegardes</button>
+        <button type="button" name="sauvegarde-aumscan4-liste" id="sauvegarde-aumscan4-liste" class="btn btn-outline-primary m-auto" data-toggle="modal" data-target="#modal-backup-list">Accéder à la liste des sauvegardes</button>
       </div>
       <div class="column justify-content-center align-self-center mt-3">
         <button type="button" name="sauvegarde-aumscan3" id="sauvegarde-aumscan3" class="btn btn-primary btn-lg mr-2">Sauvegarder l'Aumscan 3 </button>
@@ -33,7 +33,7 @@
 
   </section>
 
-  <div class="modal moda justify-content-center align-items-center" id="modal-loading-sample">
+  <div class="modal justify-content-center align-items-center" id="modal-loading-sample">
       <div class="modal-dialog">
         <div class="modal-content">
 
@@ -41,5 +41,40 @@
 
         </div>
       </div>
-    </div>
+  </div>
+
+  <div class="modal justify-content-center align-items-center" id="modal-backup-list">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Liste sauvegarde</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+              <table class="table ">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Location</th>
+                  </tr>
+                </thead>
+                <tbody id="modal-backup-list-body">
+                  
+                </tbody>
+              </table>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="ouvrir-BRSEU" data-dismiss="modal">Fermer</button>
+          </div>
+
+        </div>
+      </div>
+  </div>
 </template>
