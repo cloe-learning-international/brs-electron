@@ -75,3 +75,8 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+#modal-backup-list .modal-dialog {
+  width: 80%;
+  max-width: unset;
+}
