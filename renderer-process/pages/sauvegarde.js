@@ -45,130 +45,20 @@ aumscan4Btn.addEventListener('click', () => {
     filters :[{name: 'Sauvegarde', extensions: ['FDB','fdb']}]
   }
 
-  dialog.showSaveDialog(null, options, (destination) => {
-    if(destination != undefined) {
-      console.log(destination, ' +++++++++++++++++++++++ ');
-      console.log(appData, ' ****************************** ');
-      const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
-
-      fs.access(source, error => {
-        if (error) {
-          throw error;
-          console.log("Le dossier source n'existe pas!");
-        } else {
-
-
-          // fs.copyFile(source, destination, (err) => {
-          //     if (err) {
-          //       throw err;
-          //       console.log('Sauvegarde non effectuée!');
-          //     }
-          //     console.log('Sauvegarde effectuée avec succès!');
-          // });
-       
-
-          fs.createWriteStream(destination);
-          
-          fs.access(destination, error => {
-            if (error) {
-              throw error;
-              console.log("Le dossier source n'existe pas!");
-            } else {
-
-              var stat = fs.statSync(destination);
-              var str = progress({
-                  length: stat.size,
-                  time: 10 /* ms */
-              });
-
-              str.on('progress', function(progress) {
-                  console.log(progress.percentage);
-                  const modalLoading = document.getElementById('modal-loading-sample')
-                  modalLoading.style.display = 'flex';
-                  if(progress.percentage === 100) 
-                    setTimeout(function () {
-                      modalLoading.style.display = 'none';
-                    }, 1000);
-              });
-
-              fs.readFile(source, function(err, data) { 
-                  if (err) throw err;
-                  else {
-                    console.log(data.toString('utf8'))
-                    fs.createReadStream(destination)
-                      .pipe(str)
-                      .pipe(fs.createWriteStream(destination))
-                      .end(data.toString('utf8'));
-
-
-
-                    console.log(backupFile, ' +++++++++++++++++')
-
-                    if (!fs.existsSync(backupFile)) {
-                      console.log(backupFile, ' *******************')
-                      writer = csvWriter({sendHeaders: false});
-                      fs.mkdir(path.join(appData, 'Backup story'), function() {
-                        console.log('xxxxxxxxxxxxx')
-                      })
-                      writer.pipe(fs.createWriteStream(backupFile));
-                      writer.write({
-                        header1: 'db',
-                        header2: 'path',
-                        header3: 'date'
-                      });
-                      writer.end();
-                    } 
-
-                    var date = new Date();
-                    
-                    writer = csvWriter({sendHeaders: false});
-                    writer.pipe(fs.createWriteStream(backupFile, {flags: 'a'}));
-                    writer.write({
-                      header1: DB,
-                      header2: destination,
-                      header3: date.getDate()+'-'+(date.getMonth() + 1)+'-'+date.getFullYear()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()
-                    });
-                    writer.end();
-                  }
-                  
-              });
-            }
-          })
-
-          
-        }
-      });
-    }
-  })
+  console.log(appData, ' ****************************** ');
+  const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
+  makeBackup(source, options, DB)
+  
 })
+
 // Tell main process to start the soft when the button is clicked
 const aumscan4BtnList = document.getElementById('sauvegarde-aumscan4-liste')
 aumscan4BtnList.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-liste')
   console.log("sauvegarde-aumscan4-liste")
-  var i = 1;
-  const modalBackupListBody = document.getElementById('modal-backup-list-body')
-  modalBackupListBody.innerHTML = '';
-  fs.createReadStream(backupFile)
-  .pipe(csv())
-  .on('data', (row) => {
-    console.log('++++++++++++ ', row)
-      if(row.db === 'aumscan4') {
-        var node = document.createElement("tr"); 
-        var nodeNumber = document.createElement("th");
-        nodeNumber.innerHTML = i;
-        var nodeDate = document.createElement("td");
-        nodeDate.innerHTML = row.date;
-        var nodePath = document.createElement("td");
-        nodePath.innerHTML = row.path;
-        node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath)
-        modalBackupListBody.innerHTML +=  node.innerHTML;
-        i++;
-      }
-  })
-  .on('end', () => {
-    console.log('CSV file successfully processed');
-  });
+
+  readBackupList('aumscan4');
+ 
 })
 
 
@@ -251,3 +141,127 @@ function getDateString() {
   return `${year}${month}${day}${hour}${minutes}${seconds}`
 }
 
+function writeLogCSV(DB, destination, backupFile){
+  var date = new Date();                
+  writer = csvWriter({sendHeaders: false});
+  writer.pipe(fs.createWriteStream(backupFile, {flags: 'a'}));
+  writer.write({
+    header1: DB,
+    header2: destination,
+    header3: date.getDate()+'-'+(date.getMonth() + 1)+'-'+date.getFullYear()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()
+  });
+  writer.end();
+}
+
+function makeBackup(source, options, DB) {
+  var buttonModalError = document.getElementById('toggle-modal')
+
+  fs.access(source, error => {
+    if (error) {      
+      buttonModalError.click();
+      //throw error;
+    } else {
+
+      dialog.showSaveDialog(null, options, (destination) => {
+        if(destination != undefined) {
+          console.log(destination, ' +++++++++++++++++++++++ ');   
+
+
+          // fs.copyFile(source, destination, (err) => {
+          //     if (err) {
+          //       throw err;
+          //       console.log('Sauvegarde non effectuée!');
+          //     }
+          //     console.log('Sauvegarde effectuée avec succès!');
+          // });
+       
+
+          fs.createWriteStream(destination);
+          
+          fs.access(destination, error => {
+            if (error) {
+              throw error;
+              console.log("Le dossier source n'existe pas!");
+            } else {
+
+              var stat = fs.statSync(destination);
+              var str = progress({
+                  length: stat.size,
+                  time: 10 /* ms */
+              });
+
+              str.on('progress', function(progress) {
+                  const modalLoading = document.getElementById('modal-loading-sample')
+                  modalLoading.style.display = 'flex';
+
+                  if(progress.percentage === 100) 
+                    setTimeout(function () {
+                      modalLoading.style.display = 'none';
+                    }, 1000);
+              });
+
+              fs.readFile(source, function(err, data) { 
+                  if (err) throw err;
+                  else {
+                    console.log(data.toString('utf8'))
+                    fs.createReadStream(destination)
+                      .pipe(str)
+                      .pipe(fs.createWriteStream(destination))
+                      .end(data.toString('utf8'));
+
+                    if (!fs.existsSync(backupFile)) {
+                      //console.log(backupFile, ' *******************')
+                      writer = csvWriter({sendHeaders: false});
+                      fs.mkdir(path.join(appData, 'Backup story'), function() {
+                        console.log('xxxxxxxxxxxxx')
+                        writeLogCSV(DB, destination, backupFile);
+                      })
+                      writer.pipe(fs.createWriteStream(backupFile));
+                      writer.write({
+                        header1: 'db',
+                        header2: 'path',
+                        header3: 'date'
+                      });
+                      writer.end();
+                    } else {
+                      writeLogCSV(DB, destination, backupFile);
+                    }
+
+                    
+                  }
+                  
+              });
+            }
+          })
+
+        }
+      });
+    }
+  })
+}
+
+function readBackupList(dbName) {
+  var i = 1;
+  const modalBackupListBody = document.getElementById('modal-backup-list-body')
+  modalBackupListBody.innerHTML = '';
+  fs.createReadStream(backupFile)
+    .pipe(csv())
+    .on('data', (row) => {
+        //console.log('++++++++++++ ', row)
+        if(row.db === dbName) {
+          var node = document.createElement("tr"); 
+          var nodeNumber = document.createElement("th");
+          nodeNumber.innerHTML = i;
+          var nodeDate = document.createElement("td");
+          nodeDate.innerHTML = row.date;
+          var nodePath = document.createElement("td");
+          nodePath.innerHTML = row.path;
+          node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath)
+          modalBackupListBody.innerHTML +=  node.innerHTML;
+          i++;
+        }
+    })
+    .on('end', () => {
+      console.log('CSV file successfully processed');
+    });
+}
