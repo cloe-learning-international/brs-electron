@@ -15,4 +15,7 @@ desactivateWindowsBtn.addEventListener('click', () => {
 	// console.log( stderr: ${vbs.stderr.toString()} );
 	// console.log( stdout: ${vbs.stdout.toString()} );
 	// console.log( status: ${vbs.status} );
+
+	var modal_succes = document.getElementById('toggle-modal-update');
+	modal_succes.click();
 })

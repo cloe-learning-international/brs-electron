@@ -51,6 +51,31 @@
       </div>
     </div>
 
+    <div class="modal justify-content-center align-items-center" id="modal-desactivate-update-success">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">L’opération a réussi.</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                La mise à jour de windows a été desactivé avec succès!
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>
+            </div>
+
+          </div>
+        </div>
+    </div> 
+    <button type="button" class="hidden" data-toggle="modal" data-target="#modal-desactivate-update-success" id="toggle-modal-update">Toggle modal</button>
+
     <script type="text/javascript">
       require('./renderer-process/pages/depannage.js')
     </script>
