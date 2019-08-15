@@ -78,95 +78,120 @@ cardiaumOrientBtn.addEventListener('click', () => {
 // Tell main process to start the soft when the button is clicked
 const ouvrirCloeAumscanBtn = document.getElementById('ouvrir-CLOEAUMSCAN')
 ouvrirCloeAumscanBtn.addEventListener('click', () => {
-  ipcRenderer.send('ouvrir-CLOEAUMSCAN')
-  console.log("ouvrir-CLOEAUMSCAN")
-  var url = "https://bioresonance.learnybox.com/formation/index/?idformation=6064";
-  //console.log("++++++++++++++", url)
-  document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-  // Afficher la bonne page
-  document.getElementById("external-page").hidden = false;
-  // Cacher les autres pages
-  document.getElementById("home").hidden = true;
-  document.getElementById("about").hidden = true;
-  document.getElementById("sauvegarde").hidden = true;
-  document.getElementById("aide").hidden = true;
-  document.getElementById("depannage").hidden = true;
-  document.getElementById("comptabilite").hidden = true;
+  if(navigator.onLine){
+    ipcRenderer.send('ouvrir-CLOEAUMSCAN')
+    console.log("ouvrir-CLOEAUMSCAN")
+    var url = "https://bioresonance.learnybox.com/formation/index/?idformation=6064";
+    //console.log("++++++++++++++", url)
+    document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
+    // Afficher la bonne page
+    document.getElementById("external-page").hidden = false;
+    // Cacher les autres pages
+    document.getElementById("home").hidden = true;
+    document.getElementById("about").hidden = true;
+    document.getElementById("sauvegarde").hidden = true;
+    document.getElementById("aide").hidden = true;
+    document.getElementById("depannage").hidden = true;
+    document.getElementById("comptabilite").hidden = true;
+  }else{
+    
+    alert('Veuillez vous connecter à internet !');
+  }
+  
 })
 // Tell main process to start the soft when the button is clicked
 const ouvrirCloeCardiaumBtn = document.getElementById('ouvrir-CLOECARDIAUM')
 ouvrirCloeCardiaumBtn.addEventListener('click', () => {
-  ipcRenderer.send('ouvrir-CLOECARDIAUM')
-  console.log("ouvrir-CLOECARDIAUM")
-  var url = "https://bioresonance.learnybox.com/formation/index/?idformation=10758";
-  //console.log("++++++++++++++", url)
-  document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-  // Afficher la bonne page
-  document.getElementById("external-page").hidden = false;
-  // Cacher les autres pages
-  document.getElementById("home").hidden = true;
-  document.getElementById("about").hidden = true;
-  document.getElementById("sauvegarde").hidden = true;
-  document.getElementById("aide").hidden = true;
-  document.getElementById("depannage").hidden = true;
-  document.getElementById("comptabilite").hidden = true;
+  if(navigator.onLine){
+    ipcRenderer.send('ouvrir-CLOECARDIAUM')
+    console.log("ouvrir-CLOECARDIAUM")
+    var url = "https://bioresonance.learnybox.com/formation/index/?idformation=10758";
+    //console.log("++++++++++++++", url)
+    document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
+    // Afficher la bonne page
+    document.getElementById("external-page").hidden = false;
+    // Cacher les autres pages
+    document.getElementById("home").hidden = true;
+    document.getElementById("about").hidden = true;
+    document.getElementById("sauvegarde").hidden = true;
+    document.getElementById("aide").hidden = true;
+    document.getElementById("depannage").hidden = true;
+    document.getElementById("comptabilite").hidden = true;
+  }else{
+    alert('Veuillez vous connecter à internet !');
+  }
 })
 // Tell main process to start the soft when the button is clicked
 const ouvrirCloeTqBtn = document.getElementById('ouvrir-CLOETQ')
 ouvrirCloeTqBtn.addEventListener('click', () => {
-  ipcRenderer.send('ouvrir-CLOETQ')
-  console.log("ouvrir-CLOETQ")
-  var url = "https://bioresonance.learnybox.com/formation/index/?idformation=6219";
-  //console.log("++++++++++++++", url)
-  document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-  // Afficher la bonne page
-  document.getElementById("external-page").hidden = false;
-  // Cacher les autres pages
-  document.getElementById("home").hidden = true;
-  document.getElementById("about").hidden = true;
-  document.getElementById("sauvegarde").hidden = true;
-  document.getElementById("aide").hidden = true;
-  document.getElementById("depannage").hidden = true;
-  document.getElementById("comptabilite").hidden = true;
+  if(navigator.onLine){
+    ipcRenderer.send('ouvrir-CLOETQ')
+    console.log("ouvrir-CLOETQ")
+    var url = "https://bioresonance.learnybox.com/formation/index/?idformation=6219";
+    //console.log("++++++++++++++", url)
+    document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
+    // Afficher la bonne page
+    document.getElementById("external-page").hidden = false;
+    // Cacher les autres pages
+    document.getElementById("home").hidden = true;
+    document.getElementById("about").hidden = true;
+    document.getElementById("sauvegarde").hidden = true;
+    document.getElementById("aide").hidden = true;
+    document.getElementById("depannage").hidden = true;
+    document.getElementById("comptabilite").hidden = true;
+  }else{
+    alert('Veuillez vous connecter à internet !');
+  }
+  
 })
 
 // Tell main process to start the soft when the button is clicked
 const ouvrirBrsFrBtn = document.getElementById('ouvrir-BRSFR')
 ouvrirBrsFrBtn.addEventListener('click', () => {
-  ipcRenderer.send('ouvrir-BRSFR')
-  //console.log("ouvrir-BRSFR");
-  var contactId = document.getElementById("input-forum-private-contactid").value;
-  var url = "https://bio-resonance.fr/connexion/?contactId="+contactId;
-  document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
+  if(navigator.onLine){
+    ipcRenderer.send('ouvrir-BRSFR')
+    //console.log("ouvrir-BRSFR");
+    var contactId = document.getElementById("input-forum-private-contactid").value;
+    var url = "https://bio-resonance.fr/connexion/?contactId="+contactId;
+    document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
 
-  // Afficher la bonne page
-  document.getElementById("external-page").hidden = false;
-  // Cacher les autres pages
-  document.getElementById("home").hidden = true;
-  document.getElementById("about").hidden = true;
-  document.getElementById("sauvegarde").hidden = true;
-  document.getElementById("aide").hidden = true;
-  document.getElementById("depannage").hidden = true;
-  document.getElementById("comptabilite").hidden = true;
+    // Afficher la bonne page
+    document.getElementById("external-page").hidden = false;
+    // Cacher les autres pages
+    document.getElementById("home").hidden = true;
+    document.getElementById("about").hidden = true;
+    document.getElementById("sauvegarde").hidden = true;
+    document.getElementById("aide").hidden = true;
+    document.getElementById("depannage").hidden = true;
+    document.getElementById("comptabilite").hidden = true;
+  }else{
+    alert('Veuillez vous connecter à internet !');
+  }
+  
 })
 
 // Tell main process to start the soft when the button is clicked
 const ouvrirBrsEuBtn = document.getElementById('ouvrir-BRSEU')
 ouvrirBrsEuBtn.addEventListener('click', () => {
-  ipcRenderer.send('ouvrir-BRSEU')
-  //console.log("ouvrir-BRSEU")
-  var contactId = document.getElementById("input-web-official-contactid").value;
-  var url = "https://bio-resonance.eu/?contactId="+contactId;
-  document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-  // Afficher la bonne page
-  document.getElementById("external-page").hidden = false;
-  // Cacher les autres pages
-  document.getElementById("home").hidden = true;
-  document.getElementById("about").hidden = true;
-  document.getElementById("sauvegarde").hidden = true;
-  document.getElementById("aide").hidden = true;
-  document.getElementById("depannage").hidden = true;
-  document.getElementById("comptabilite").hidden = true;
+  if(navigator.onLine){
+    ipcRenderer.send('ouvrir-BRSEU')
+    //console.log("ouvrir-BRSEU")
+    var contactId = document.getElementById("input-web-official-contactid").value;
+    var url = "https://bio-resonance.eu/?contactId="+contactId;
+    document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
+    // Afficher la bonne page
+    document.getElementById("external-page").hidden = false;
+    // Cacher les autres pages
+    document.getElementById("home").hidden = true;
+    document.getElementById("about").hidden = true;
+    document.getElementById("sauvegarde").hidden = true;
+    document.getElementById("aide").hidden = true;
+    document.getElementById("depannage").hidden = true;
+    document.getElementById("comptabilite").hidden = true;
+  }else{
+    alert('Veuillez vous connecter à internet !');
+  }
+  
 })
 
 function launchExe(appName) {
