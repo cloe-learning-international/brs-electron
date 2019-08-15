@@ -5,7 +5,8 @@ var path = require("path");
 var child = require('child_process').execFile;
 const fs = require('fs');
 rread = require('readdir-recursive');
-
+var modal_succes = document.getElementById('toggle-modal-internet-error');
+  
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;
 
@@ -94,8 +95,7 @@ ouvrirCloeAumscanBtn.addEventListener('click', () => {
     document.getElementById("depannage").hidden = true;
     document.getElementById("comptabilite").hidden = true;
   }else{
-    
-    alert('Veuillez vous connecter à internet !');
+    modal_succes.click();
   }
   
 })
@@ -118,7 +118,7 @@ ouvrirCloeCardiaumBtn.addEventListener('click', () => {
     document.getElementById("depannage").hidden = true;
     document.getElementById("comptabilite").hidden = true;
   }else{
-    alert('Veuillez vous connecter à internet !');
+    modal_succes.click();
   }
 })
 // Tell main process to start the soft when the button is clicked
@@ -140,7 +140,7 @@ ouvrirCloeTqBtn.addEventListener('click', () => {
     document.getElementById("depannage").hidden = true;
     document.getElementById("comptabilite").hidden = true;
   }else{
-    alert('Veuillez vous connecter à internet !');
+    modal_succes.click();
   }
   
 })
@@ -165,7 +165,7 @@ ouvrirBrsFrBtn.addEventListener('click', () => {
     document.getElementById("depannage").hidden = true;
     document.getElementById("comptabilite").hidden = true;
   }else{
-    alert('Veuillez vous connecter à internet !');
+    modal_succes.click();
   }
   
 })
@@ -189,7 +189,7 @@ ouvrirBrsEuBtn.addEventListener('click', () => {
     document.getElementById("depannage").hidden = true;
     document.getElementById("comptabilite").hidden = true;
   }else{
-    alert('Veuillez vous connecter à internet !');
+    modal_succes.click();
   }
   
 })
