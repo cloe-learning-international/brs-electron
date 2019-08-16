@@ -72,4 +72,14 @@ table.crud {
 #modal-backup-list .modal-dialog {
   width: 80%;
   max-width: unset;
+
+  #remove-backup-file {
+    background: transparent;
+    border: none;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }

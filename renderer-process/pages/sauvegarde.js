@@ -101,6 +101,7 @@ cardiaumOrientBtnList.addEventListener('click', () => {
   console.log("sauvegarde-cardiaum-orient-liste")
 })
 
+
 var walkSync = function(dir, cb) {
   var files = fs.readdirSync(dir).filter(function( elm ) {
       return elm.match(/.*\.(FDB)/ig);
@@ -240,28 +241,57 @@ function makeBackup(source, options, DB) {
   })
 }
 
+
 function readBackupList(dbName) {
-  var i = 1;
+  var i = 1, deletedFiles = [];
   const modalBackupListBody = document.getElementById('modal-backup-list-body')
   modalBackupListBody.innerHTML = '';
   fs.createReadStream(backupFile)
     .pipe(csv())
     .on('data', (row) => {
-        //console.log('++++++++++++ ', row)
-        if(row.db === dbName) {
-          var node = document.createElement("tr"); 
-          var nodeNumber = document.createElement("th");
-          nodeNumber.innerHTML = i;
-          var nodeDate = document.createElement("td");
-          nodeDate.innerHTML = row.date;
-          var nodePath = document.createElement("td");
-          nodePath.innerHTML = row.path;
-          node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath)
-          modalBackupListBody.innerHTML +=  node.innerHTML;
-          i++;
-        }
+        fs.access(row.path, error => {
+          if(row.db === dbName && !error) {
+          
+            var node = document.createElement("tr");
+            var nodeNumber = document.createElement("th");
+            nodeNumber.innerHTML = i;
+            var nodeDate = document.createElement("td");
+            nodeDate.innerHTML = row.date;
+            var nodePath = document.createElement("td");
+            nodePath.innerHTML = row.path;
+            var nodeAction = document.createElement("td");
+            nodeAction.innerHTML = '<button id="remove-backup-file" data-path="'+row.path+'" onclick="removeBackup(this)""><svg class="icon"><use xlink:href="./assets/image/icons.svg#icon-trash" /></svg></button>';
+            node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath).appendChild(nodeAction)
+            modalBackupListBody.innerHTML +=  node.innerHTML;
+            i++;
+
+            fs.access(row.path, error => {
+              if(error) {
+                deletedFiles.push(row.path);
+              }
+            })
+
+          }
+        })
+
     })
     .on('end', () => {
       console.log('CSV file successfully processed');
     });
+}
+
+function removeBackup(box) {
+  console.log("remove-backup-file ++++ ")
+  var dataPath = box.getAttribute('data-path');
+  console.log("remove-backup-file ++++ ", dataPath)
+  fs.unlink(dataPath, function(err, data) {
+    if(!err) {
+      //console.log('succès!')
+      var buttonModalBackupList = document.getElementById('sauvegarde-aumscan4-liste');
+      var buttonModalDeleteSucces = document.getElementById('toggle-modal-delete-file-success');
+      buttonModalBackupList.click();
+      buttonModalDeleteSucces.click();
+
+    }
+  })
 }
