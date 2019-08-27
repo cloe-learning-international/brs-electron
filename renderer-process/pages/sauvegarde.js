@@ -8,6 +8,7 @@ var progress = require('progress-stream');
 const {dialog} = require('electron').remote;
 var csvWriter = require('csv-write-stream');
 var writer = csvWriter({sendHeaders: false}); 
+var backupToRemovePath = '';
 
 const csv = require('csv-parser');
 
@@ -94,6 +95,7 @@ cardiaumOrientBtn.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-cardiaum-orient')
   console.log("sauvegarde-cardiaum-orient")
 })
+
 // Tell main process to start the soft when the button is clicked
 const cardiaumOrientBtnList = document.getElementById('sauvegarde-cardiaum-orient-liste')
 cardiaumOrientBtnList.addEventListener('click', () => {
@@ -101,6 +103,11 @@ cardiaumOrientBtnList.addEventListener('click', () => {
   console.log("sauvegarde-cardiaum-orient-liste")
 })
 
+//Remove backup file
+const removeBackupBtn = document.getElementById('remove-backup-file')
+removeBackupBtn.addEventListener('click', () => {
+  removeBackup();
+})
 
 var walkSync = function(dir, cb) {
   var files = fs.readdirSync(dir).filter(function( elm ) {
@@ -178,62 +185,64 @@ function makeBackup(source, options, DB) {
        
 
           fs.createWriteStream(destination);
-          
-          fs.access(destination, error => {
-            if (error) {
-              throw error;
-              console.log("Le dossier source n'existe pas!");
-            } else {
 
-              var stat = fs.statSync(destination);
-              var str = progress({
-                  length: stat.size,
-                  time: 10 /* ms */
-              });
+          setTimeout(function(){ 
+            fs.access(destination, error => {
+              if (error) {
+                throw error;
+                console.log("Le dossier source n'existe pas!");
+              } else {
 
-              str.on('progress', function(progress) {
-                  const modalLoading = document.getElementById('modal-loading-sample')
-                  modalLoading.style.display = 'flex';
+                var stat = fs.statSync(destination);
+                var str = progress({
+                    length: stat.size,
+                    time: 10 /* ms */
+                });
 
-                  if(progress.percentage === 100) 
-                    setTimeout(function () {
-                      modalLoading.style.display = 'none';
-                    }, 1000);
-              });
+                str.on('progress', function(progress) {
+                    const modalLoading = document.getElementById('modal-loading-sample')
+                    modalLoading.style.display = 'flex';
 
-              fs.readFile(source, function(err, data) { 
-                  if (err) throw err;
-                  else {
-                    console.log(data.toString('utf8'))
-                    fs.createReadStream(destination)
-                      .pipe(str)
-                      .pipe(fs.createWriteStream(destination))
-                      .end(data.toString('utf8'));
+                    if(progress.percentage === 100) 
+                      setTimeout(function () {
+                        modalLoading.style.display = 'none';
+                      }, 1000);
+                });
 
-                    if (!fs.existsSync(backupFile)) {
-                      //console.log(backupFile, ' *******************')
-                      writer = csvWriter({sendHeaders: false});
-                      fs.mkdir(path.join(appData, 'Backup story'), function() {
-                        console.log('xxxxxxxxxxxxx')
+                fs.readFile(source, function(err, data) { 
+                    if (err) throw err;
+                    else {
+                      //console.log(data.toString('utf8'))
+                      fs.createReadStream(destination)
+                        .pipe(str)
+                        .pipe(fs.createWriteStream(destination))
+                        .end(data.toString('utf8'));
+
+                      if (!fs.existsSync(backupFile)) {
+                        //console.log(backupFile, ' *******************')
+                        writer = csvWriter({sendHeaders: false});
+                        fs.mkdir(path.join(appData, 'Backup story'), function() {
+                          console.log('xxxxxxxxxxxxx')
+                          writeLogCSV(DB, destination, backupFile);
+                        })
+                        writer.pipe(fs.createWriteStream(backupFile));
+                        writer.write({
+                          header1: 'db',
+                          header2: 'path',
+                          header3: 'date'
+                        });
+                        writer.end();
+                      } else {
                         writeLogCSV(DB, destination, backupFile);
-                      })
-                      writer.pipe(fs.createWriteStream(backupFile));
-                      writer.write({
-                        header1: 'db',
-                        header2: 'path',
-                        header3: 'date'
-                      });
-                      writer.end();
-                    } else {
-                      writeLogCSV(DB, destination, backupFile);
-                    }
+                      }
 
+                      
+                    }
                     
-                  }
-                  
-              });
-            }
-          })
+                });
+              }
+            })
+          }, 1000);
 
         }
       });
@@ -246,52 +255,122 @@ function readBackupList(dbName) {
   var i = 1, deletedFiles = [];
   const modalBackupListBody = document.getElementById('modal-backup-list-body')
   modalBackupListBody.innerHTML = '';
-  fs.createReadStream(backupFile)
-    .pipe(csv())
-    .on('data', (row) => {
-        fs.access(row.path, error => {
-          if(row.db === dbName && !error) {
-          
-            var node = document.createElement("tr");
-            var nodeNumber = document.createElement("th");
-            nodeNumber.innerHTML = i;
-            var nodeDate = document.createElement("td");
-            nodeDate.innerHTML = row.date;
-            var nodePath = document.createElement("td");
-            nodePath.innerHTML = row.path;
-            var nodeAction = document.createElement("td");
-            nodeAction.innerHTML = '<button id="remove-backup-file" data-path="'+row.path+'" onclick="removeBackup(this)""><svg class="icon"><use xlink:href="./assets/image/icons.svg#icon-trash" /></svg></button>';
-            node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath).appendChild(nodeAction)
-            modalBackupListBody.innerHTML +=  node.innerHTML;
-            i++;
 
-            fs.access(row.path, error => {
-              if(error) {
-                deletedFiles.push(row.path);
-              }
-            })
+  
+  if (!fs.existsSync(backupFile)) {
+    document.querySelector('#global-modal-error .modal-body').innerHTML = "La liste de sauvegarde est vide!";
+    const btnModalError = document.getElementById('toggle-global-modal-error');
+    btnModalError.click();
+  }
+  else {
 
-          }
-        })
+    fs.createReadStream(backupFile)
+      .pipe(csv())
+      .on('data', (row) => {
+          fs.access(row.path, error => {
+            if(row.db === dbName && !error) {
+              //console.log(row, ' +++++++++++++++++++')
+              var node = document.createElement("tr");
+              var nodeNumber = document.createElement("th");
+              nodeNumber.innerHTML = i;
+              var nodeDate = document.createElement("td");
+              nodeDate.innerHTML = row.date;
+              var nodePath = document.createElement("td");
+              nodePath.innerHTML = row.path;
+              var nodeAction = document.createElement("td");
+              nodeAction.innerHTML = '<button data-path="'+row.path+'" onclick="toggleRemoveBackupModal(this);"><svg class="btn-icon-trash"><use xlink:href="./assets/image/icons.svg#icon-trash" /></svg></button><button class="ml-2 btn btn-success" id="reinstall-backup-file" data-path="' + row.path + '" onclick="reinstallBackup(this)">Réinstaller</button>';
+              node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath).appendChild(nodeAction)
+              modalBackupListBody.innerHTML +=  node.innerHTML;
+              i++;
 
-    })
-    .on('end', () => {
-      console.log('CSV file successfully processed');
-    });
+            }
+          })
+
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed');
+        if(i===1) {
+          document.querySelector('#global-modal-error .modal-body').innerHTML = "La liste de sauvegarde est vide!";
+          const btnModalError = document.getElementById('toggle-global-modal-error');
+          btnModalError.click();
+        }
+        else {
+          const btnBackupList = document.getElementById('toggle-aumscan4-backup-list')
+          btnBackupList.click();
+        }
+      });
+  }
+  
 }
 
-function removeBackup(box) {
-  console.log("remove-backup-file ++++ ")
-  var dataPath = box.getAttribute('data-path');
-  console.log("remove-backup-file ++++ ", dataPath)
-  fs.unlink(dataPath, function(err, data) {
-    if(!err) {
-      //console.log('succès!')
-      var buttonModalBackupList = document.getElementById('sauvegarde-aumscan4-liste');
-      var buttonModalDeleteSucces = document.getElementById('toggle-modal-delete-file-success');
-      buttonModalBackupList.click();
-      buttonModalDeleteSucces.click();
+function toggleRemoveBackupModal(box) {
+  const btnModalError = document.getElementById('toggle-modal-remove-backup-file');
+  btnModalError.click();
+  backupToRemovePath = box.getAttribute('data-path');
+}
 
+function removeBackup(box) { 
+  console.log("remove-backup-file ++++ ", backupToRemovePath)
+  fs.unlink(backupToRemovePath, function(err, data) {
+    if(!err) {
+      document.querySelector('#global-modal-success .modal-body').innerHTML = "Suppression du fichier avec succès!";
+      var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
+      var buttonModalSucces = document.getElementById('toggle-global-modal-success');
+      buttonModalBackupList.click();
+      buttonModalSucces.click();
+      readBackupList('aumscan4');
+    }
+  })
+}
+
+function reinstallBackup(box) {
+  var dataPath = box.getAttribute('data-path');
+  console.log("reinstall-backup-file ++++ ", dataPath)
+  var date = new Date();                
+  const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
+  const destination = path.join(appData, 'Backup source', 'BASEUSER' + getDateString() + '.FDB');
+
+  if (!fs.existsSync(destination)) {
+    fs.mkdir(path.join(appData, 'Backup source'), function(err) {
+      backupThenDeleteAndReplace(source, destination, dataPath, function(response) {
+        if(response) {
+          document.querySelector('#global-modal-success .modal-body').innerHTML = "Réinstallation de la sauvegarde avec succès!";
+          var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
+          var buttonModalSucces = document.getElementById('toggle-global-modal-success');
+          buttonModalBackupList.click();
+          buttonModalSucces.click();
+        }
+      });
+    })
+  }
+  else {
+    backupThenDeleteAndReplace(source, destination, dataPath);
+  }
+  
+}
+
+function copy(source, destination, cb) {
+  fs.createWriteStream(destination);
+  fs.readFile(source, function(err, data) { 
+    if (err) throw err;
+    else {
+      //console.log(data.toString('utf8'))
+      fs.createReadStream(destination)
+        .pipe(fs.createWriteStream(destination))
+        .end(data.toString('utf8')); 
+
+      cb(1);     
+    }
+    
+  });
+}
+
+function backupThenDeleteAndReplace(source, backupPath, newSource, cb) {
+  copy(source, backupPath, function(data) {
+    if(data) {
+      copy(newSource, source, function(data) {
+        if(data) cb(1)
+      })
     }
   })
 }

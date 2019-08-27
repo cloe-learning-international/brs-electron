@@ -11,7 +11,7 @@
       </div>
       <div class="column justify-content-center align-self-center mt-3">
         <button type="button" name="sauvegarde-aumscan4" id="sauvegarde-aumscan4" class="btn btn-primary btn-lg mr-2">Sauvegarder l'Aumscan 4 </button>
-        <button type="button" name="sauvegarde-aumscan4-liste" id="sauvegarde-aumscan4-liste" class="btn btn-outline-primary m-auto" data-toggle="modal" data-target="#modal-backup-list">Accéder à la liste des sauvegardes</button>
+        <button type="button" name="sauvegarde-aumscan4-liste" id="sauvegarde-aumscan4-liste" class="btn btn-outline-primary m-auto">Accéder à la liste des sauvegardes</button>   <!-- data-toggle="modal" data-target="#modal-backup-list" -->
       </div>
       <div class="column justify-content-center align-self-center mt-3">
         <button type="button" name="sauvegarde-aumscan3" id="sauvegarde-aumscan3" class="btn btn-primary btn-lg mr-2">Sauvegarder l'Aumscan 3 </button>
@@ -28,6 +28,12 @@
   </div>
 
   </section>
+
+  <!-- <button type="button" class="hidden" data-toggle="modal" data-target="#modal-source-error-empty" id="toggle-modal">Toggle modal</button> -->
+  <button type="button" name="sauvegarde-aumscan4-liste" id="toggle-global-modal-success" class="hidden" data-toggle="modal" data-target="#global-modal-success">Toggle global modal success</button> 
+  <button type="button" class="hidden" data-toggle="modal" data-target="#global-modal-error" id="toggle-global-modal-error">Toggle global modal error</button>
+  <button type="button" name="sauvegarde-aumscan4-liste" id="toggle-aumscan4-backup-list" class="hidden" data-toggle="modal" data-target="#modal-backup-list">Toggle aumscan 4 backup list</button>
+  <button type="button" class="hidden"  id="toggle-modal-remove-backup-file"  data-toggle="modal" data-target="#modal-validation-remove-backup">Toggle modal remove backup file</button>
 
   <div class="modal justify-content-center align-items-center" id="modal-loading-sample">
       <div class="modal-dialog">
@@ -75,7 +81,7 @@
       </div>
   </div>
 
-  <div class="modal justify-content-center align-items-center" id="modal-source-error-empty">
+  <div class="modal justify-content-center align-items-center" id="global-modal-error"> <!-- modal-source-error-empty -->
       <div class="modal-dialog">
         <div class="modal-content">
 
@@ -98,11 +104,8 @@
         </div>
       </div>
   </div> 
-  <button type="button" class="hidden" data-toggle="modal" data-target="#modal-source-error-empty" id="toggle-modal">Toggle modal</button>
 
-  <button type="button" name="sauvegarde-aumscan4-liste" id="toggle-modal-delete-file-success" class="hidden" data-toggle="modal" data-target="#modal-delete-file-success">Remove backup</button>
-
-  <div class="modal justify-content-center align-items-center" id="modal-delete-file-success">
+  <div class="modal justify-content-center align-items-center" id="global-modal-success">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -125,7 +128,30 @@
       </div>
     </div>
   </div> 
-  <button type="button" class="hidden" data-toggle="modal" data-target="#modal-source-error-empty" id="toggle-modal">Toggle modal</button>
+  
+  <div class="modal justify-content-center align-items-center" id="modal-validation-remove-backup">
+    <div class="modal-dialog">
+      <div class="modal-content">
 
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Validation avant suppression</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            Voulez-vous vraiment supprimer le fichier de sauvegarde?
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="remove-backup-file">Je confirme</button>
+        </div>
+
+      </div>
+    </div>
+  </div> 
 
 </template>

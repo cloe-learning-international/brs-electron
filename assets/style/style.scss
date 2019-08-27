@@ -73,13 +73,8 @@ table.crud {
   width: 80%;
   max-width: unset;
 
-  #remove-backup-file {
-    background: transparent;
-    border: none;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
+  .btn-icon-trash {
+    width: 20px;
+    height: 20px;
   }
 }
