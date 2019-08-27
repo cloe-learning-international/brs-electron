@@ -150,13 +150,14 @@ function getDateString() {
 }
 
 function writeLogCSV(DB, destination, backupFile){
-  var date = new Date();                
+  var date = new Date(); 
+                 
   writer = csvWriter({sendHeaders: false});
   writer.pipe(fs.createWriteStream(backupFile, {flags: 'a'}));
   writer.write({
     header1: DB,
     header2: destination,
-    header3: date.getDate()+'-'+(date.getMonth() + 1)+'-'+date.getFullYear()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()
+    header3: `${date.getDate()}`.padStart(2, '0')+'-'+`${date.getMonth() + 1}`.padStart(2, '0') +'-'+date.getFullYear()+' '+`${date.getHours()}`.padStart(2, '0') +':'+`${date.getMinutes()}`.padStart(2, '0')+':'+`${date.getSeconds()}`.padStart(2, '0')
   });
   writer.end();
 }
