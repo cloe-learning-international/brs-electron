@@ -368,8 +368,14 @@ function copy(source, destination, cb) {
 function backupThenDeleteAndReplace(source, backupPath, newSource, cb) {
   copy(source, backupPath, function(data) {
     if(data) {
+      //Ecrire le chemin du nouveau sauvegarde dans la liste des sauvegardes
+      writeLogCSV('aumscan4', backupPath, backupFile);
       copy(newSource, source, function(data) {
-        if(data) cb(1)
+        if(data) {
+          //Supprimer l'ancien sauvegarde
+          fs.unlink(newSource)
+          cb(1)
+        }
       })
     }
   })
