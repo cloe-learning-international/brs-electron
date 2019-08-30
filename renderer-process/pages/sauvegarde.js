@@ -2,12 +2,14 @@ console.log("home.js from renderer-process")
 
 const {ipcRenderer} = require('electron')
 var fs = require('fs');
-
 var path = require('path');
+var os = require('os');
 var progress = require('progress-stream');
+var copydir = require('copy-dir');
 const {dialog} = require('electron').remote;
 var csvWriter = require('csv-write-stream');
 var writer = csvWriter({sendHeaders: false}); 
+
 var backupToRemovePath = '';
 
 const csv = require('csv-parser');
@@ -77,30 +79,66 @@ aumscan3BtnList.addEventListener('click', () => {
 })
 
 // Tell main process to start the soft when the button is clicked
-const cardiaumNaturoBtn = document.getElementById('sauvegarde-cardiaum-naturo')
-cardiaumNaturoBtn.addEventListener('click', () => {
-  ipcRenderer.send('sauvegarde-cardiaum-naturo')
-  console.log("sauvegarde-cardiaum-naturo")
-})
-// Tell main process to start the soft when the button is clicked
-const cardiaumNaturoBtnList = document.getElementById('sauvegarde-cardiaum-naturo-liste')
-cardiaumNaturoBtnList.addEventListener('click', () => {
-  ipcRenderer.send('sauvegarde-cardiaum-naturo-liste')
-  console.log("sauvegarde-cardiaum-naturo-liste")
-})
+const cardiaumBtn = document.getElementById('sauvegarde-cardiaum')
+cardiaumBtn.addEventListener('click', () => {
+  ipcRenderer.send('sauvegarde-cardiaum')
+  console.log("sauvegarde-cardiaum")
+  console.log(os.platform(), process.env.ProgramData, path.resolve('/var/lib', (require('electron').app || require('electron').remote.app).getName()),  ' ++++++++++++++++++ ');
+  
+  var DB = 'cardium';
 
-// Tell main process to start the soft when the button is clicked
-const cardiaumOrientBtn = document.getElementById('sauvegarde-cardiaum-orient')
-cardiaumOrientBtn.addEventListener('click', () => {
-  ipcRenderer.send('sauvegarde-cardiaum-orient')
-  console.log("sauvegarde-cardiaum-orient")
-})
+  var options = {
+    title: "Sauvegarde",
+    defaultPath: (require('electron').app || require('electron').remote.app).getPath('documents') + '/Database_' + getDateString(),
+    buttonLabel : "sauvegarder"
+  }
 
+  var opsys =  os.platform();
+  switch(opsys) {
+    case "win32", "win64":
+      var source = path.join(process.env.ProgramData || 'C:\\ProgramData', 'Dinamika', 'Database');
+      if (fs.existsSync(source)) {
+        showLoadingModal();
+        makeDirectoryBackup(options, source, DB, function(response) {
+          console.log(response, ' ++++++++++++++++++')
+          if(response) closeLoadingModal();
+        });
+      } 
+      else {
+        document.querySelector('#global-modal-error .modal-body').innerHTML = "La base de données source n'existe pas!";
+        const btnModalError = document.getElementById('toggle-global-modal-error');
+        btnModalError.click();
+      }
+      
+      break;
+    case "linux":
+      var source = path.join('/var/lib', 'Dinamika', 'Database');
+      if (fs.existsSync(source)) {
+        showLoadingModal();
+        makeDirectoryBackup(options, source, DB, function(response) {
+          console.log(response, ' ++++++++++++++++++')
+          if(response) closeLoadingModal();
+        });
+      }
+      else {
+        document.querySelector('#global-modal-error .modal-body').innerHTML = "La base de données source n'existe pas!";
+        const btnModalError = document.getElementById('toggle-global-modal-error');
+        btnModalError.click();
+      }
+      break;
+    case "darwin":
+      console.log('comming soon ...')
+      break;
+  }
+  
+  
+ 
+})
 // Tell main process to start the soft when the button is clicked
-const cardiaumOrientBtnList = document.getElementById('sauvegarde-cardiaum-orient-liste')
-cardiaumOrientBtnList.addEventListener('click', () => {
-  ipcRenderer.send('sauvegarde-cardiaum-orient-liste')
-  console.log("sauvegarde-cardiaum-orient-liste")
+const cardiaumBtnList = document.getElementById('sauvegarde-cardiaum-liste')
+cardiaumBtnList.addEventListener('click', () => {
+  ipcRenderer.send('sauvegarde-cardiaum-liste')
+  console.log("sauvegarde-cardiaum-liste")
 })
 
 //Remove backup file
@@ -201,13 +239,9 @@ function makeBackup(source, options, DB) {
                 });
 
                 str.on('progress', function(progress) {
-                    const modalLoading = document.getElementById('modal-loading-sample')
-                    modalLoading.style.display = 'flex';
+                    showLoadingModal();
 
-                    if(progress.percentage === 100) 
-                      setTimeout(function () {
-                        modalLoading.style.display = 'none';
-                      }, 1000);
+                    if(progress.percentage === 100) closeLoadingModal();
                 });
 
                 fs.readFile(source, function(err, data) { 
@@ -381,3 +415,42 @@ function backupThenDeleteAndReplace(source, backupPath, newSource, cb) {
     }
   })
 }
+
+function makeDirectoryBackup(options, source, DB, cb) {
+  dialog.showSaveDialog(null, options, (destination) => {
+    if(destination != undefined) {
+      console.log(destination, ' +++++++++++++++++++++++ ');      
+      fs.mkdir(destination, function(err) {
+        if(!err)
+          copydir(source, destination, {
+            utimes: true,  // keep add time and modify time
+            mode: true,    // keep file mode
+            cover: true    // cover file when exists, default is true
+          }, function(err){
+            if(err) throw err;
+            writeLogCSV(DB, destination, backupFile);
+            cb(1);
+          });
+      })
+
+    }
+  });
+  
+}
+
+function showLoadingModal() {
+  const modalLoading = document.getElementById('modal-loading-sample');
+  modalLoading.style.display = 'flex';
+}
+
+function closeLoadingModal() {
+  const modalLoading = document.getElementById('modal-loading-sample');
+  setTimeout(function () {
+    modalLoading.style.display = 'none';
+  }, 1000);
+}
+
+
+                    
+
+                    
