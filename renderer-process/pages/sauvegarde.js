@@ -139,6 +139,8 @@ const cardiaumBtnList = document.getElementById('sauvegarde-cardiaum-liste')
 cardiaumBtnList.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-cardiaum-liste')
   console.log("sauvegarde-cardiaum-liste")
+
+  readBackupList('cardium');
 })
 
 //Remove backup file
