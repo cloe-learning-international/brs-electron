@@ -2,6 +2,7 @@ console.log("home.js from renderer-process")
 
 const {ipcRenderer} = require('electron')
 var fs = require('fs');
+const fse = require('fs-extra')
 var path = require('path');
 var os = require('os');
 var progress = require('progress-stream');
@@ -16,7 +17,8 @@ const csv = require('csv-parser');
 
 const appData =  (require('electron').app || require('electron').remote.app).getPath('userData');
 const cardiumPath = 'C:\\ProgramData\\Dinamika\\Database';
-const backupFile = path.join(appData, 'Backup story', 'log.csv')
+const backupFile = path.join(appData, 'Backup story', 'log.csv');
+var FILETYPE = '';
 
 // Tell main process to start the soft when the button is clicked
 const aumscan4LuxeBtn = document.getElementById('sauvegarde-aumscan4-luxe')
@@ -60,7 +62,7 @@ aumscan4BtnList.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-aumscan4-liste')
   console.log("sauvegarde-aumscan4-liste")
 
-  readBackupList('aumscan4');
+  readBackupList('aumscan4', 'file');
  
 })
 
@@ -93,45 +95,20 @@ cardiaumBtn.addEventListener('click', () => {
     buttonLabel : "sauvegarder"
   }
 
-  var opsys =  os.platform();
-  switch(opsys) {
-    case "win32", "win64":
-      var source = path.join(process.env.ProgramData || 'C:\\ProgramData', 'Dinamika', 'Database');
-      if (fs.existsSync(source)) {
-        showLoadingModal();
-        makeDirectoryBackup(options, source, DB, function(response) {
-          console.log(response, ' ++++++++++++++++++')
-          if(response) closeLoadingModal();
-        });
-      } 
-      else {
-        document.querySelector('#global-modal-error .modal-body').innerHTML = "La base de données source n'existe pas!";
-        const btnModalError = document.getElementById('toggle-global-modal-error');
-        btnModalError.click();
-      }
-      
-      break;
-    case "linux":
-      var source = path.join('/var/lib', 'Dinamika', 'Database');
-      if (fs.existsSync(source)) {
-        showLoadingModal();
-        makeDirectoryBackup(options, source, DB, function(response) {
-          console.log(response, ' ++++++++++++++++++')
-          if(response) closeLoadingModal();
-        });
-      }
-      else {
-        document.querySelector('#global-modal-error .modal-body').innerHTML = "La base de données source n'existe pas!";
-        const btnModalError = document.getElementById('toggle-global-modal-error');
-        btnModalError.click();
-      }
-      break;
-    case "darwin":
-      console.log('comming soon ...')
-      break;
-  }
-  
-  
+  getCardiumSource(function(source) {
+    if (fs.existsSync(source)) {
+      showLoadingModal();
+      makeDirectoryBackup(options, source, DB, function(response) {
+        console.log(response, ' ++++++++++++++++++')
+        if(response) closeLoadingModal();
+      });
+    } 
+    else {
+      document.querySelector('#global-modal-error .modal-body').innerHTML = "La base de données source n'existe pas!";
+      const btnModalError = document.getElementById('toggle-global-modal-error');
+      btnModalError.click();
+    }
+  })
  
 })
 // Tell main process to start the soft when the button is clicked
@@ -140,7 +117,7 @@ cardiaumBtnList.addEventListener('click', () => {
   ipcRenderer.send('sauvegarde-cardiaum-liste')
   console.log("sauvegarde-cardiaum-liste")
 
-  readBackupList('cardium');
+  readBackupList('cardium', 'folder');
 })
 
 //Remove backup file
@@ -288,7 +265,7 @@ function makeBackup(source, options, DB) {
 }
 
 
-function readBackupList(dbName) {
+function readBackupList(dbName, fileType) {
   var i = 1, deletedFiles = [];
   const modalBackupListBody = document.getElementById('modal-backup-list-body')
   modalBackupListBody.innerHTML = '';
@@ -304,24 +281,21 @@ function readBackupList(dbName) {
     fs.createReadStream(backupFile)
       .pipe(csv())
       .on('data', (row) => {
-          fs.access(row.path, error => {
-            if(row.db === dbName && !error) {
-              //console.log(row, ' +++++++++++++++++++')
-              var node = document.createElement("tr");
-              var nodeNumber = document.createElement("th");
-              nodeNumber.innerHTML = i;
-              var nodeDate = document.createElement("td");
-              nodeDate.innerHTML = row.date;
-              var nodePath = document.createElement("td");
-              nodePath.innerHTML = row.path;
-              var nodeAction = document.createElement("td");
-              nodeAction.innerHTML = '<button data-path="'+row.path+'" onclick="toggleRemoveBackupModal(this);"><svg class="btn-icon-trash"><use xlink:href="./assets/image/icons.svg#icon-trash" /></svg></button><button class="ml-2 btn btn-success" id="reinstall-backup-file" data-path="' + row.path + '" onclick="reinstallBackup(this)">Réinstaller</button>';
-              node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath).appendChild(nodeAction)
-              modalBackupListBody.innerHTML +=  node.innerHTML;
-              i++;
-
-            }
-          })
+          if (fs.existsSync(row.path) && row.db === dbName) {
+            //console.log(row, ' +++++++++++++++++++')
+            var node = document.createElement("tr");
+            var nodeNumber = document.createElement("th");
+            nodeNumber.innerHTML = i;
+            var nodeDate = document.createElement("td");
+            nodeDate.innerHTML = row.date;
+            var nodePath = document.createElement("td");
+            nodePath.innerHTML = row.path;
+            var nodeAction = document.createElement("td");
+            nodeAction.innerHTML = '<button data-path="'+row.path+'" onclick="toggleRemoveBackupModal(this,\''+fileType+'\');"><svg class="btn-icon-trash"><use xlink:href="./assets/image/icons.svg#icon-trash" /></svg></button><button class="ml-2 btn btn-success" id="reinstall-backup-file" data-path="' + row.path + '" onclick="reinstallBackup(this, \''+fileType+'\')">Réinstaller</button>';
+            node.appendChild(nodeNumber).appendChild(nodeDate).appendChild(nodePath).appendChild(nodeAction)
+            modalBackupListBody.innerHTML +=  node.innerHTML;
+            i++;
+          }
 
       })
       .on('end', () => {
@@ -340,7 +314,8 @@ function readBackupList(dbName) {
   
 }
 
-function toggleRemoveBackupModal(box) {
+function toggleRemoveBackupModal(box, fileType) {
+  FILETYPE = fileType;
   const btnModalError = document.getElementById('toggle-modal-remove-backup-file');
   btnModalError.click();
   backupToRemovePath = box.getAttribute('data-path');
@@ -348,41 +323,86 @@ function toggleRemoveBackupModal(box) {
 
 function removeBackup(box) { 
   console.log("remove-backup-file ++++ ", backupToRemovePath)
-  fs.unlink(backupToRemovePath, function(err, data) {
-    if(!err) {
-      document.querySelector('#global-modal-success .modal-body').innerHTML = "Suppression du fichier avec succès!";
-      var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
-      var buttonModalSucces = document.getElementById('toggle-global-modal-success');
-      buttonModalBackupList.click();
-      buttonModalSucces.click();
-      readBackupList('aumscan4');
-    }
-  })
-}
-
-function reinstallBackup(box) {
-  var dataPath = box.getAttribute('data-path');
-  console.log("reinstall-backup-file ++++ ", dataPath)
-  var date = new Date();                
-  const source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
-  const destination = path.join(appData, 'Backup source', 'BASEUSER' + getDateString() + '.FDB');
-
-  if (!fs.existsSync(destination)) {
-    fs.mkdir(path.join(appData, 'Backup source'), function(err) {
-      backupThenDeleteAndReplace(source, destination, dataPath, function(response) {
-        if(response) {
-          document.querySelector('#global-modal-success .modal-body').innerHTML = "Réinstallation de la sauvegarde avec succès!";
+  switch(FILETYPE) {
+    case 'file':
+      fs.unlink(backupToRemovePath, function(err, data) {
+        if(!err) {
+          document.querySelector('#global-modal-success .modal-body').innerHTML = "Suppression du fichier avec succès!";
           var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
           var buttonModalSucces = document.getElementById('toggle-global-modal-success');
           buttonModalBackupList.click();
           buttonModalSucces.click();
+          readBackupList('aumscan4', 'file');
+        }
+      })
+      break;
+    case 'folder':
+      fse.remove(backupToRemovePath, err => {
+        if(!err) {
+          document.querySelector('#global-modal-success .modal-body').innerHTML = "Suppression du fichier avec succès!";
+          var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
+          var buttonModalSucces = document.getElementById('toggle-global-modal-success');
+          buttonModalBackupList.click();
+          buttonModalSucces.click();
+          readBackupList('cardium', 'folder');
+        }
+      })
+  }
+  
+}
+
+function reinstallBackup(box, fileType) {
+  var dataPath = box.getAttribute('data-path');
+  console.log("reinstall-backup-file ++++ ", dataPath)
+  var date = new Date();  
+
+  switch(fileType) {
+    case 'file':
+      var source = path.join(appData, 'Aumscan 4', 'Base', 'BASEUSER.FDB');
+      var destination = path.join(appData, 'Backup source', 'BASEUSER' + getDateString() + '.FDB');
+
+      if (!fs.existsSync(destination)) {
+        fs.mkdir(path.join(appData, 'Backup source'), function(err) {
+          backupThenDeleteAndReplace(source, destination, dataPath, fileType, function(response) {
+            if(response) {
+              document.querySelector('#global-modal-success .modal-body').innerHTML = "Réinstallation de la sauvegarde avec succès!";
+              var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
+              var buttonModalSucces = document.getElementById('toggle-global-modal-success');
+              buttonModalBackupList.click();
+              buttonModalSucces.click();
+            }
+          });
+        })
+      }
+      else {
+        backupThenDeleteAndReplace(source, destination, dataPath, fileType);
+      }
+      break;
+    case 'folder':
+      getCardiumSource(function(source) {
+        if (fs.existsSync(source)) {
+          var destination = path.join(appData, 'Backup source', 'Database' + getDateString());
+          if (!fs.existsSync(destination)) {
+            fs.mkdir(path.join(appData, 'Backup source'), function(err) {
+              backupThenDeleteAndReplace(source, destination, dataPath, fileType, function(response) {
+                if(response) {
+                  document.querySelector('#global-modal-success .modal-body').innerHTML = "Réinstallation de la sauvegarde avec succès!";
+                  var buttonModalBackupList = document.getElementById('toggle-aumscan4-backup-list');
+                  var buttonModalSucces = document.getElementById('toggle-global-modal-success');
+                  buttonModalBackupList.click();
+                  buttonModalSucces.click();
+                }
+              });
+            })
+          }
+          else {
+            backupThenDeleteAndReplace(source, destination, dataPath, fileType);
+          }
         }
       });
-    })
-  }
-  else {
-    backupThenDeleteAndReplace(source, destination, dataPath);
-  }
+      break;
+  }             
+  
   
 }
 
@@ -402,20 +422,39 @@ function copy(source, destination, cb) {
   });
 }
 
-function backupThenDeleteAndReplace(source, backupPath, newSource, cb) {
-  copy(source, backupPath, function(data) {
-    if(data) {
-      //Ecrire le chemin du nouveau sauvegarde dans la liste des sauvegardes
-      writeLogCSV('aumscan4', backupPath, backupFile);
-      copy(newSource, source, function(data) {
+function backupThenDeleteAndReplace(source, backupPath, newSource, fileType, cb) {
+  switch(fileType) {
+    case 'file':
+      copy(source, backupPath, function(data) {
         if(data) {
-          //Supprimer l'ancien sauvegarde
-          fs.unlink(newSource)
-          cb(1)
+          //Ecrire le chemin du nouveau sauvegarde dans la liste des sauvegardes
+          writeLogCSV('aumscan4', backupPath, backupFile);
+          copy(newSource, source, function(data) {
+            if(data) {
+              //Supprimer l'ancien sauvegarde
+              fs.unlink(newSource)
+              cb(1)
+            }
+          })
         }
       })
-    }
-  })
+      break;
+
+    case 'folder':
+      fse.copy(source, backupPath, err => {
+        if (err) return console.error(err)
+        writeLogCSV('cardium', backupPath, backupFile);
+        fse.copy(newSource, source, function(data) {
+          if(data) {
+            //Supprimer l'ancien sauvegarde
+            fse.remove(newSource)
+            cb(1)
+          }
+        })
+      })
+      break;
+  }
+  
 }
 
 function makeDirectoryBackup(options, source, DB, cb) {
@@ -430,7 +469,24 @@ function makeDirectoryBackup(options, source, DB, cb) {
             cover: true    // cover file when exists, default is true
           }, function(err){
             if(err) throw err;
-            writeLogCSV(DB, destination, backupFile);
+            
+            if (!fs.existsSync(backupFile)) {
+              //console.log(backupFile, ' *******************')
+              writer = csvWriter({sendHeaders: false});
+              fs.mkdir(path.join(appData, 'Backup story'), function() {
+                console.log('xxxxxxxxxxxxx')
+                writeLogCSV(DB, destination, backupFile);
+              })
+              //writeLogCSV(DB, destination, backupFile);
+              writer.write({
+                header1: 'db',
+                header2: 'path',
+                header3: 'date'
+              });
+              writer.end();
+            } else {
+              writeLogCSV(DB, destination, backupFile);
+            }
             cb(1);
           });
       })
@@ -452,7 +508,22 @@ function closeLoadingModal() {
   }, 1000);
 }
 
-
+function getCardiumSource(cb) {
+  var opsys =  os.platform();
+  var source;
+  switch(opsys) {
+    case "win32", "win64":
+      source = path.join(process.env.ProgramData || 'C:\\ProgramData', 'Dinamika', 'Database');      
+      break;
+    case "linux":
+      var source = path.join('/var/lib', 'Dinamika', 'Database');
+      break;
+    case "darwin":
+      console.log('comming soon ...')
+      break;
+  }
+  cb(source);
+}
                     
 
                     

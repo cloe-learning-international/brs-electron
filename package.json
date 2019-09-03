@@ -41,6 +41,7 @@
     "electron-settings": "^2.2.4",
     "electron-simple-updater": "^1.5.0",
     "electron-updater": "^4.1.2",
+    "fs-extra": "^8.1.0",
     "infusionsoft": "^0.3.7",
     "infusionsoft-api": "^0.6.0",
     "infusionsoft-node-sdk": "0.0.1",
