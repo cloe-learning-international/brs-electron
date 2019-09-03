@@ -47,6 +47,7 @@
         </div>
         <div class="row justify-content-center">
           <button type="button" name="desacivate-windows-update" id="desacivate-windows-update" class="btn btn-primary btn-lg m-2">Désactiver Windows Update</button>
+          <button type="button" name="download-team-viewr" id="download-team-viewr" class="btn btn-primary btn-lg m-2">Télecharger Team viewr</button>
         </div>
       </div>
     </div>
@@ -74,7 +75,35 @@
           </div>
         </div>
     </div> 
+
+    <!-- The Modal -->
+    <div class="modal" id="modal-connexion-depanage-internet-error">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Erreur de connexion</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            Veuillez vous connecter à internet !
+          </div>
+
+          <!-- Modal footer -->
+           <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+          </div >
+
+        </div>
+      </div>
+    </div>
+
     <button type="button" class="hidden" data-toggle="modal" data-target="#modal-desactivate-update-success" id="toggle-modal-update">Toggle modal</button>
+
+    <button type="button" class="hidden" data-toggle="modal" data-target="#modal-connexion-depanage-internet-error" id="toggle-modal-depanage-internet-error">Toggle modal</button>
 
     <script type="text/javascript">
       require('./renderer-process/pages/depannage.js')
