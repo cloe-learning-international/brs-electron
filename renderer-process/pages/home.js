@@ -1,6 +1,27 @@
 console.log("home.js from renderer-process")
 
 const {ipcRenderer} = require('electron');
+
+//timezone
+var moment = require('moment-timezone');
+const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+var date = moment().tz(zone).format('YYYY-MM-DD H:m:s');
+//end timezone
+//csv
+//var fs = require('fs');
+var path = require('path');
+var progress = require('progress-stream');
+const {dialog} = require('electron').remote;
+//const elec_window = remote.getCurrentWindow()
+var csvWriter = require('csv-write-stream');
+var writer = csvWriter({sendHeaders: false}); 
+const csv = require('csv-parser');
+const source="";
+const appData =  (require('electron').app || require('electron').remote.app).getPath('userData');
+const file_store = path.join(appData,'Synchro','synch.csv');
+const file_txt = path.join(appData,'Synchro','synch.txt');
+// End csv
+
 var path = require("path");
 var child = require('child_process').execFile;
 const fs = require('fs');
@@ -9,6 +30,43 @@ var modal_succes = document.getElementById('toggle-modal-internet-error');
   
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;
+
+/*********** Start connexion inernert *******/
+  if (!fs.existsSync(file_store)) { 
+    makeBuck(source,date);    
+  } else {
+    //console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
+    var list=[];
+    var count_day="";
+    fs.createReadStream(file_store)
+    .pipe(csv())
+    .on('data', (row) => {
+      list.push(row.date);
+    })
+    .on('end', () => {
+      var d1 = new Date(list[list.length-1]);
+      var d2 = new Date(date);
+      var diff = dateDiff(d1, d2);
+      count_day= diff.min; 
+      if(navigator.onLine){
+        console.log('ONNNNNNNNNNNNNNNNNN',parseInt(count_day));
+        if(parseInt(count_day)>=2){
+          makeBuck(source,date);
+        }
+      }else{
+        console.log('OFFFFFFFFFFFFFFFFF',count_day);
+        if(count_day>=2){
+          modal_succes.click();
+        }
+      }  
+    });  
+  } 
+  const close_appli = document.getElementById('no_internet')
+  close_appli.addEventListener('click', ()=>{
+    window.close();
+  });
+
+/*********** End connexion inernert *******/
 
 // Tell main process to start the soft when the button is clicked
 const aumscan4LuxeBtn = document.getElementById('demarrer-aumscan4-luxe')
@@ -199,4 +257,48 @@ function launchExe(appName) {
       if(err) throw err;   
       console.log(data.toString());
   });
+}
+
+function writeLogCSV(date, file_store){              
+  writer = csvWriter({sendHeaders: false});
+  writer.pipe(fs.createWriteStream(file_store, {flags: 'a'}));
+  writer.write({
+    header1: date,
+  });
+  writer.end();
+}
+function makeBuck(source,date){
+
+      if (!fs.existsSync(file_store)) {
+        writer = csvWriter({sendHeaders: false});
+        fs.mkdir(path.join(appData, 'Synchro'), function() {
+          writeLogCSV(date, file_store);
+        })
+        writer.pipe(fs.createWriteStream(file_store));
+        writer.write({
+          header1: 'date',
+        });
+        writer.end();
+      } else {
+        writeLogCSV(date, file_store);
+      }
+}
+
+function dateDiff(date1, date2){
+    var diff = {}                         
+    var tmp = date2 - date1;
+ 
+    tmp = Math.floor(tmp/1000);             
+    diff.sec = tmp % 60;                   
+ 
+    tmp = Math.floor((tmp-diff.sec)/60);    
+    diff.min = tmp % 60;                    
+ 
+    tmp = Math.floor((tmp-diff.min)/60);    
+    diff.hour = tmp % 24;                   
+     
+    tmp = Math.floor((tmp-diff.hour)/24);  
+    diff.day = tmp;
+     
+    return diff;
 }

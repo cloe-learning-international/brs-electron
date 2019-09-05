@@ -46,6 +46,7 @@
     "infusionsoft-api": "^0.6.0",
     "infusionsoft-node-sdk": "0.0.1",
     "jquery": "^3.4.1",
+    "moment-timezone": "^0.5.26",
     "passport-infusionsoft": "0.0.3",
     "popper.js": "^1.15.0",
     "readdir-recursive": "0.0.4",
