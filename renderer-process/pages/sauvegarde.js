@@ -97,10 +97,8 @@ cardiaumBtn.addEventListener('click', () => {
 
   getCardiumSource(function(source) {
     if (fs.existsSync(source)) {
-      showLoadingModal();
       makeDirectoryBackup(options, source, DB, function(response) {
         console.log(response, ' ++++++++++++++++++')
-        if(response) closeLoadingModal();
       });
     } 
     else {
@@ -189,18 +187,9 @@ function makeBackup(source, options, DB) {
     } else {
 
       dialog.showSaveDialog(null, options, (destination) => {
-        if(destination != undefined) {
+        if(!destination) console.log(' canceled +++++++++++++++++++++++ ');
+        else {
           console.log(destination, ' +++++++++++++++++++++++ ');   
-
-
-          // fs.copyFile(source, destination, (err) => {
-          //     if (err) {
-          //       throw err;
-          //       console.log('Sauvegarde non effectuée!');
-          //     }
-          //     console.log('Sauvegarde effectuée avec succès!');
-          // });
-       
 
           fs.createWriteStream(destination);
 
@@ -459,7 +448,9 @@ function backupThenDeleteAndReplace(source, backupPath, newSource, fileType, cb)
 
 function makeDirectoryBackup(options, source, DB, cb) {
   dialog.showSaveDialog(null, options, (destination) => {
-    if(destination != undefined) {
+    if(!destination) console.log(' canceled +++++++++++++++++++++++ '); 
+    else {
+      showLoadingModal();
       console.log(destination, ' +++++++++++++++++++++++ ');      
       fs.mkdir(destination, function(err) {
         if(!err)
@@ -487,7 +478,7 @@ function makeDirectoryBackup(options, source, DB, cb) {
             } else {
               writeLogCSV(DB, destination, backupFile);
             }
-            cb(1);
+            closeLoadingModal();
           });
       })
 
