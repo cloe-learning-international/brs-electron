@@ -33,7 +33,12 @@ document.getElementById("home").hidden = false;
 
 /*********** Start connexion inernert *******/
   if (!fs.existsSync(file_store)) { 
-    makeBuck(source,date);    
+    if(navigator.onLine){
+      makeBuck(source,date);
+    }else{
+      modal_succes.click();
+    }
+        
   } else {
     //console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
     var list=[];
