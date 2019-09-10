@@ -259,7 +259,11 @@ ouvrirBrsEuBtn.addEventListener('click', () => {
 
 function launchExe(appName) {
   child(appName, function(err, data) {
-      if(err) throw err;   
+      if(err)  {
+        //throw err; 
+        const btnModalError = document.getElementById('toggle-app-not-installed-modal-error');
+        btnModalError.click();
+      }  
       console.log(data.toString());
   });
 }
