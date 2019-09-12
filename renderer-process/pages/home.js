@@ -27,6 +27,7 @@ var child = require('child_process').execFile;
 const fs = require('fs');
 rread = require('readdir-recursive');
 var modal_succes = document.getElementById('toggle-modal-internet-error');
+const modalLoading = document.getElementById('modal-loading-home');
   
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;
@@ -144,19 +145,24 @@ const ouvrirCloeAumscanBtn = document.getElementById('ouvrir-CLOEAUMSCAN')
 ouvrirCloeAumscanBtn.addEventListener('click', () => {
   if(navigator.onLine){
     ipcRenderer.send('ouvrir-CLOEAUMSCAN')
-    console.log("ouvrir-CLOEAUMSCAN")
+    //console.log("ouvrir-CLOEAUMSCAN")
+    modalLoading.style.display = 'flex';
     var url = "https://bioresonance.learnybox.com/formation/index/?idformation=6064";
     //console.log("++++++++++++++", url)
     document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-    // Afficher la bonne page
-    document.getElementById("external-page").hidden = false;
-    // Cacher les autres pages
-    document.getElementById("home").hidden = true;
-    document.getElementById("about").hidden = true;
-    document.getElementById("sauvegarde").hidden = true;
-    document.getElementById("aide").hidden = true;
-    document.getElementById("depannage").hidden = true;
-    document.getElementById("comptabilite").hidden = true;
+    
+    setTimeout(function () {
+      modalLoading.style.display = 'none';
+      // Afficher la bonne page
+      document.getElementById("external-page").hidden = false;
+      // Cacher les autres pages
+      document.getElementById("home").hidden = true;
+      document.getElementById("about").hidden = true;
+      document.getElementById("sauvegarde").hidden = true;
+      document.getElementById("aide").hidden = true;
+      document.getElementById("depannage").hidden = true;
+      document.getElementById("comptabilite").hidden = true;
+    }, 1000);
   }else{
     modal_succes.click();
   }
@@ -167,19 +173,24 @@ const ouvrirCloeCardiaumBtn = document.getElementById('ouvrir-CLOECARDIAUM')
 ouvrirCloeCardiaumBtn.addEventListener('click', () => {
   if(navigator.onLine){
     ipcRenderer.send('ouvrir-CLOECARDIAUM')
-    console.log("ouvrir-CLOECARDIAUM")
+    //console.log("ouvrir-CLOECARDIAUM")
+    modalLoading.style.display = 'flex';
     var url = "https://bioresonance.learnybox.com/formation/index/?idformation=10758";
     //console.log("++++++++++++++", url)
     document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-    // Afficher la bonne page
-    document.getElementById("external-page").hidden = false;
-    // Cacher les autres pages
-    document.getElementById("home").hidden = true;
-    document.getElementById("about").hidden = true;
-    document.getElementById("sauvegarde").hidden = true;
-    document.getElementById("aide").hidden = true;
-    document.getElementById("depannage").hidden = true;
-    document.getElementById("comptabilite").hidden = true;
+      
+    setTimeout(function () {
+      modalLoading.style.display = 'none';
+      // Afficher la bonne page
+      document.getElementById("external-page").hidden = false;
+      // Cacher les autres pages
+      document.getElementById("home").hidden = true;
+      document.getElementById("about").hidden = true;
+      document.getElementById("sauvegarde").hidden = true;
+      document.getElementById("aide").hidden = true;
+      document.getElementById("depannage").hidden = true;
+      document.getElementById("comptabilite").hidden = true;
+    }, 1000);
   }else{
     modal_succes.click();
   }
@@ -189,19 +200,24 @@ const ouvrirCloeTqBtn = document.getElementById('ouvrir-CLOETQ')
 ouvrirCloeTqBtn.addEventListener('click', () => {
   if(navigator.onLine){
     ipcRenderer.send('ouvrir-CLOETQ')
-    console.log("ouvrir-CLOETQ")
+    //console.log("ouvrir-CLOETQ")
+    modalLoading.style.display = 'flex';
     var url = "https://bioresonance.learnybox.com/formation/index/?idformation=6219";
     //console.log("++++++++++++++", url)
     document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-    // Afficher la bonne page
-    document.getElementById("external-page").hidden = false;
-    // Cacher les autres pages
-    document.getElementById("home").hidden = true;
-    document.getElementById("about").hidden = true;
-    document.getElementById("sauvegarde").hidden = true;
-    document.getElementById("aide").hidden = true;
-    document.getElementById("depannage").hidden = true;
-    document.getElementById("comptabilite").hidden = true;
+    
+    setTimeout(function () {
+      modalLoading.style.display = 'none';
+      // Afficher la bonne page
+      document.getElementById("external-page").hidden = false;
+      // Cacher les autres pages
+      document.getElementById("home").hidden = true;
+      document.getElementById("about").hidden = true;
+      document.getElementById("sauvegarde").hidden = true;
+      document.getElementById("aide").hidden = true;
+      document.getElementById("depannage").hidden = true;
+      document.getElementById("comptabilite").hidden = true;
+    }, 1000);
   }else{
     modal_succes.click();
   }
@@ -213,20 +229,24 @@ const ouvrirBrsFrBtn = document.getElementById('ouvrir-BRSFR')
 ouvrirBrsFrBtn.addEventListener('click', () => {
   if(navigator.onLine){
     ipcRenderer.send('ouvrir-BRSFR')
-    //console.log("ouvrir-BRSFR");
+    modalLoading.style.display = 'flex';
     var contactId = document.getElementById("input-forum-private-contactid").value;
     var url = "https://bio-resonance.fr/connexion/?contactId="+contactId;
     document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
 
-    // Afficher la bonne page
-    document.getElementById("external-page").hidden = false;
-    // Cacher les autres pages
-    document.getElementById("home").hidden = true;
-    document.getElementById("about").hidden = true;
-    document.getElementById("sauvegarde").hidden = true;
-    document.getElementById("aide").hidden = true;
-    document.getElementById("depannage").hidden = true;
-    document.getElementById("comptabilite").hidden = true;
+    setTimeout(function () {
+      modalLoading.style.display = 'none';
+      // Afficher la bonne page
+      document.getElementById("external-page").hidden = false;
+      // Cacher les autres pages
+      document.getElementById("home").hidden = true;
+      document.getElementById("about").hidden = true;
+      document.getElementById("sauvegarde").hidden = true;
+      document.getElementById("aide").hidden = true;
+      document.getElementById("depannage").hidden = true;
+      document.getElementById("comptabilite").hidden = true;
+    }, 1000);
+
   }else{
     modal_succes.click();
   }
@@ -238,19 +258,23 @@ const ouvrirBrsEuBtn = document.getElementById('ouvrir-BRSEU')
 ouvrirBrsEuBtn.addEventListener('click', () => {
   if(navigator.onLine){
     ipcRenderer.send('ouvrir-BRSEU')
-    //console.log("ouvrir-BRSEU")
+    modalLoading.style.display = 'flex';
     var contactId = document.getElementById("input-web-official-contactid").value;
     var url = "https://bio-resonance.eu/?contactId="+contactId;
     document.getElementById("external-page").innerHTML='<webview src="'+url+'"></webview>'
-    // Afficher la bonne page
-    document.getElementById("external-page").hidden = false;
-    // Cacher les autres pages
-    document.getElementById("home").hidden = true;
-    document.getElementById("about").hidden = true;
-    document.getElementById("sauvegarde").hidden = true;
-    document.getElementById("aide").hidden = true;
-    document.getElementById("depannage").hidden = true;
-    document.getElementById("comptabilite").hidden = true;
+    
+    setTimeout(function () {
+      modalLoading.style.display = 'none';
+      // Afficher la bonne page
+      document.getElementById("external-page").hidden = false;
+      // Cacher les autres pages
+      document.getElementById("home").hidden = true;
+      document.getElementById("about").hidden = true;
+      document.getElementById("sauvegarde").hidden = true;
+      document.getElementById("aide").hidden = true;
+      document.getElementById("depannage").hidden = true;
+      document.getElementById("comptabilite").hidden = true;
+    }, 1000);
   }else{
     modal_succes.click();
   }
