@@ -82,7 +82,7 @@ aumscan4LuxeBtn.addEventListener('click', () => {
 
   //const folder = 'C:'; 
   const appAumscan4Luxe =  'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
-  launchExe(appAumscan4Luxe);
+  launchApp('iexplore.exe');
   
 
   /*rread.file(folder, function(file) {
@@ -110,7 +110,7 @@ aumscan4Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan4')
   console.log("demarrer-aumscan4")
   const appAumscan4 =  'C:\\Users\\rosea\\AppData\\Roaming\\Aumscan 4\\Aumscan v4.exe';
-  launchExe(appAumscan4);
+  launchApp('Aumscan v4.exe');
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -119,7 +119,7 @@ aumscan3Btn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-aumscan3')
   console.log("demarrer-aumscan3")
   const appAumscan3 =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Naturo\\Cardiaum-Naturo.exe';
-  launchExe(appAumscan3);
+  launchApp('Cardiaum-Naturo.exe');
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -128,7 +128,7 @@ cardiaumNaturoBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-naturo')
   console.log("demarrer-cardiaum-naturo")
   const appCardiumNaturo =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Naturo\\Cardiaum-Naturo.exe';
-  launchExe(appCardiumNaturo);
+  launchApp('Cardiaum-Naturo.exe');
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -137,7 +137,7 @@ cardiaumOrientBtn.addEventListener('click', () => {
   ipcRenderer.send('demarrer-cardiaum-orient')
   console.log("demarrer-cardiaum-orient")
   const appCardiumOrient =  'C:\\Program Files (x86)\\Dinamika\\Cardiaum-Orient\\Cardiaum-Orient.exe';
-  launchExe(appCardiumOrient);
+  launchApp('Cardiaum-Orient.exe');
 })
 
 // Tell main process to start the soft when the button is clicked
@@ -281,23 +281,94 @@ ouvrirBrsEuBtn.addEventListener('click', () => {
   
 })
 
-function launchExe(appName) {
-  child(appName, function(err, data) {
-      if(err)  {
-        //throw err; 
-        const btnModalError = document.getElementById('toggle-app-not-installed-modal-error');
-        btnModalError.click();
-      }  
-      console.log(data.toString());
+function launchApp(appName) {
+  const appData =  (require('electron').app || require('electron').remote.app).getPath('userData');
+  const installedAppLog = path.join(appData, 'Installed App', 'app.csv');
+
+  if (!fs.existsSync(installedAppLog)) {
+    createMemoryLaunchApp(appName, installedAppLog)   
+   
+  } else {
+    fs.createReadStream(installedAppLog)
+      .pipe(csv())
+      .on('data', (row) => {
+        console.log(row, ' +++++++++++++++++++')
+
+          if (fs.existsSync(row.path) && row.app === appName) {
+            //console.log(row, ' +++++++++++++++++++')
+            launchExe(row.path);
+          }
+          else {
+            console.log("modifier le csv si l'app n'existe pas ++++++++ ")
+            createMemoryLaunchApp(appName, installedAppLog)
+          }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed');
+      });
+  }
+ 
+}
+
+function createMemoryLaunchApp(appName, installedAppLog) {
+  const options = {
+    title: "Chemin d'installation",
+    buttonLabel: 'Démarrer',    
+    properties: ['openDirectory'],
+    message: "Veuillez indiquer le chemin d'installation"
+  };
+
+  dialog.showOpenDialog(null, options, (filePaths) => {
+    if(!filePaths) console.log('canceled ++++++++ ');
+    else {
+      var appPath = path.join(filePaths[0], appName);
+      if (!fs.existsSync(installedAppLog)) {
+          writer = csvWriter({sendHeaders: false});
+          fs.mkdir(path.join(appData, 'Installed App'), function() {
+            console.log('xxxxxxxxxxxxx')
+            writeLogCSV({header1: appName, header2: appPath}, installedAppLog);
+            launchExe(appPath);
+          })
+          writer.pipe(fs.createWriteStream(installedAppLog));
+          writer.write({
+            header1: 'app',
+            header2: 'path'
+          });
+          writer.end();
+      }
+
+      else {
+          writeLogCSV({header1: appName, header2: appPath}, installedAppLog);
+          launchExe(appPath);
+      }
+
+      
+    }
+   
   });
 }
 
-function writeLogCSV(date, file_store){              
+function launchExe(appName) {
+  if(fs.existsSync(appName)) {
+    child(appName, function(err, data) {
+        if(err)  {
+          console.log(err)
+          
+        }  
+        console.log(data.toString());
+    });
+  }
+  else {
+    const btnModalError = document.getElementById('toggle-app-not-installed-modal-error');
+    btnModalError.click();
+  }
+  
+}
+
+function writeLogCSV(data, file_store){              
   writer = csvWriter({sendHeaders: false});
   writer.pipe(fs.createWriteStream(file_store, {flags: 'a'}));
-  writer.write({
-    header1: date,
-  });
+  writer.write(data);
   writer.end();
 }
 function makeBuck(source,date){
@@ -305,7 +376,7 @@ function makeBuck(source,date){
       if (!fs.existsSync(file_store)) {
         writer = csvWriter({sendHeaders: false});
         fs.mkdir(path.join(appData, 'Synchro'), function() {
-          writeLogCSV(date, file_store);
+          writeLogCSV({header1: date}, file_store);
         })
         writer.pipe(fs.createWriteStream(file_store));
         writer.write({
@@ -313,7 +384,7 @@ function makeBuck(source,date){
         });
         writer.end();
       } else {
-        writeLogCSV(date, file_store);
+        writeLogCSV({header1: date}, file_store);
       }
 }
 
