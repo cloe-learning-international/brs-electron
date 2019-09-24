@@ -285,6 +285,8 @@ function launchApp(appName) {
   const appData =  (require('electron').app || require('electron').remote.app).getPath('userData');
   const installedAppLog = path.join(appData, 'Installed App', 'app.csv');
 
+  var is_launched = false;
+
   if (!fs.existsSync(installedAppLog)) {
     createMemoryLaunchApp(appName, installedAppLog)   
    
@@ -297,13 +299,15 @@ function launchApp(appName) {
           if (fs.existsSync(row.path) && row.app === appName) {
             //console.log(row, ' +++++++++++++++++++')
             launchExe(row.path);
+            is_launched = true;
           }
-          else {
-            console.log("modifier le csv si l'app n'existe pas ++++++++ ")
-            createMemoryLaunchApp(appName, installedAppLog)
-          }
+          
       })
       .on('end', () => {
+        if(is_launched == false) {
+          console.log("modifier le csv si l'app n'existe pas ++++++++ ")
+          createMemoryLaunchApp(appName, installedAppLog)
+        }
         console.log('CSV file successfully processed');
       });
   }
@@ -362,7 +366,6 @@ function launchExe(appName) {
     const btnModalError = document.getElementById('toggle-app-not-installed-modal-error');
     btnModalError.click();
   }
-  
 }
 
 function writeLogCSV(data, file_store){              
