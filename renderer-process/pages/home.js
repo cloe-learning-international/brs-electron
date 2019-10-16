@@ -27,11 +27,19 @@ var child = require('child_process').execFile;
 const fs = require('fs');
 rread = require('readdir-recursive');
 var modal_succes = document.getElementById('toggle-modal-internet-error');
+var modal_date = document.getElementById('toggle-modal-date-error');
 const modalLoading = document.getElementById('modal-loading-home');
-  
+ 
+
+
+ 
 // Lancer par défaut cette page au lancement de l'application
 document.getElementById("home").hidden = false;
-
+// if(navigator.onLine){
+//   //var dat= new Date(Date.now());
+//   var dat= srvTime();
+//   alert("Server time is: " + date +' and date is : '+ new Date().toGMTString());
+// }
 /*********** Start connexion inernert *******/
   if (!fs.existsSync(file_store)) { 
     if(navigator.onLine){
@@ -55,22 +63,28 @@ document.getElementById("home").hidden = false;
       var diff = dateDiff(d1, d2);
       count_day= diff.min; 
       if(navigator.onLine){
-        console.log('ONNNNNNNNNNNNNNNNNN',parseInt(count_day));
+        //console.log('ONNNNNNNNNNNNNNNNNN',parseInt(count_day));
         if(parseInt(count_day)>=2){
           makeBuck(source,date);
         }
+        if(parseInt(count_day)<0){
+          modal_date.click();
+        }
       }else{
-        console.log('OFFFFFFFFFFFFFFFFF',count_day);
+        //console.log('OFFFFFFFFFFFFFFFFF',count_day);
         if(count_day>=2){
           modal_succes.click();
+        }
+        if(parseInt(count_day)<0){
+          modal_date.click();
         }
       }  
     });  
   } 
-  const close_appli = document.getElementById('no_internet')
-  close_appli.addEventListener('click', ()=>{
-    window.close();
-  });
+  const close_connex = document.getElementById('no_internet')
+  const close_date = document.getElementById('invalid_date')
+  close_appli(close_connex)
+  close_appli(close_date)
 
 /*********** End connexion inernert *******/
 
@@ -408,4 +422,37 @@ function dateDiff(date1, date2){
     diff.day = tmp;
      
     return diff;
+}
+
+function close_appli(id) {
+  id.addEventListener('click', ()=>{
+    window.close();
+  });
+}
+var xmlHttp;
+function srvTime(){
+    try {
+        //FF, Opera, Safari, Chrome
+        xmlHttp = new XMLHttpRequest();
+    }
+    catch (err1) {
+        //IE
+        // try {
+        //     xmlHttp = new ActiveXObject('Msxml2.XMLHTTP');
+        // }
+        // catch (err2) {
+        //     try {
+        //         xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+        //     }
+        //     catch (eerr3) {
+        //         //AJAX not supported, use CPU time.
+        //         alert("AJAX not supported");
+        //     }
+        // }
+    }
+    xmlHttp.open('HEAD',window.location.href.toString(),false);
+    xmlHttp.setRequestHeader("Content-Type", "text/html");
+    xmlHttp.send('');
+    console.log(xmlHttp.getResponseHeader("Date"))
+    return xmlHttp.getResponseHeader("Date");
 }

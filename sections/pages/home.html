@@ -124,6 +124,29 @@
         </div>
       </div>
     </div>
+    <div class="modal" id="modal-date-error">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Erreur de validité</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            Veuillez regler la date de votre ordinateur! Merci 
+          </div>
+
+          <!-- Modal footer -->
+           <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="invalid_date" data-dismiss="modal">Fermer</button>
+          </div >
+
+        </div>
+      </div>
+    </div>
 
     <div class="modal justify-content-center align-items-center" id="app-not-installed-modal-error"> <!-- modal-source-error-empty -->
         <div class="modal-dialog">
@@ -159,7 +182,8 @@
         </div>
     </div>
 
-    <button type="button" class="hidden" data-toggle="modal" data-target="#modal-connexion-internet-error" id="toggle-modal-internet-error">Toggle modal</button>
+    <button type="button" class="hidden" data-toggle="modal" data-target="#modal-connexion-internet-error" id="toggle-modal-internet-error">Toggle modal connexion</button>
+    <button type="button" class="hidden" data-toggle="modal" data-target="#modal-date-error" id="toggle-modal-date-error">Toggle modal date</button>
     <button type="button" name="toggle-app-not-installed-modal-error" id="toggle-app-not-installed-modal-error" class="hidden" data-toggle="modal" data-target="#app-not-installed-modal-error">Toggle App not installed modal</button>
 
     <script type="text/javascript">
