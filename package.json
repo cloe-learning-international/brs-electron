@@ -35,7 +35,7 @@
     "infusionsoft": "^0.3.7",
     "infusionsoft-api": "^0.6.0",
     "infusionsoft-node-sdk": "0.0.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "passport-infusionsoft": "0.0.3",
     "popper.js": "^1.15.0",
     "tablesort": "^5.1.0",
